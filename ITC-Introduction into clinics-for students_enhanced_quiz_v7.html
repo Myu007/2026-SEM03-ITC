@@ -1,0 +1,4235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITC - 200 Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark Mode - FIXED VISIBILITY ISSUES */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .header {
+            background: #2c2c54;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .quiz-section {
+            background: #2c2c54;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .controls-panel,
+        body.dark-mode .question-grid {
+            background: #2c2c54;
+            color: #e0e0e0;
+        }
+
+        /* FIXED: Dark mode title visibility */
+        body.dark-mode .title {
+            color: #e0e0e0 !important;
+        }
+
+        /* FIXED: Dark mode controls title visibility */
+        body.dark-mode .controls-title,
+        body.dark-mode .grid-title {
+            color: #e0e0e0 !important;
+        }
+
+        /* FIXED: Dark mode jump to question label visibility */
+        body.dark-mode .jump-to-question label {
+            color: #e0e0e0 !important;
+        }
+
+        /* FIXED: Dark mode question text visibility */
+        body.dark-mode .question-text {
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode .answer-option {
+            background: #40407a;
+            border-color: #706fd3;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .answer-option:hover:not(.disabled) {
+            background: #5352ed;
+            border-color: #3742fa;
+        }
+
+        /* FIXED: Dark mode option labels (A, B, C, D, E) visibility */
+        body.dark-mode .option-label {
+            background: #706fd3 !important;
+            color: #ffffff !important;
+        }
+
+        /* FIXED: Dark mode correct/incorrect answer visibility */
+        body.dark-mode .answer-option.correct {
+            background: #4caf50 !important;
+            color: #ffffff !important;
+            border-color: #388e3c !important;
+        }
+
+        body.dark-mode .answer-option.incorrect {
+            background: #f44336 !important;
+            color: #ffffff !important;
+            border-color: #d32f2f !important;
+        }
+
+        body.dark-mode .answer-option.correct .option-label,
+        body.dark-mode .answer-option.incorrect .option-label {
+            background: rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+        }
+
+        /* FIXED: Dark mode correct answer mode visibility */
+        body.dark-mode .answer-option.correct-answer-mode {
+            background: #4caf50 !important;
+            color: #ffffff !important;
+            border: 2px solid #388e3c !important;
+            font-weight: 600;
+        }
+
+        body.dark-mode .answer-option.other-answer-mode {
+            background: #40407a !important;
+            color: #b0b0b0 !important;
+            border: 1px solid #706fd3 !important;
+            opacity: 0.7;
+        }
+
+        body.dark-mode .grid-item {
+            background: #40407a;
+            border-color: #706fd3;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .grid-item:hover {
+            background: #5352ed;
+            border-color: #3742fa;
+        }
+
+        /* Exam Mode Body Styles */
+        body.exam-mode {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        body.exam-mode.dark-mode {
+            background: #1a1a2e;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Container */
+        body.exam-mode .container {
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Header */
+        body.exam-mode .header {
+            background: #e8e8e8;
+            border-radius: 0;
+            margin-bottom: 0;
+            padding: 15px 20px;
+            box-shadow: none;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.exam-mode.dark-mode .header {
+            background: #2c2c54;
+            border-bottom: 1px solid #40407a;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Title */
+        body.exam-mode .title {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        body.exam-mode.dark-mode .title {
+            color: #e0e0e0;
+        }
+
+        .timer-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Timer Section */
+        body.exam-mode .timer-section {
+            gap: 20px;
+        }
+
+        .timer-settings {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .timer-settings.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Exam Mode Timer Settings - Show in exam mode */
+        body.exam-mode .timer-settings {
+            display: flex;
+        }
+
+        /* NEW: Question Shuffle Settings for Exam Mode */
+        .question-shuffle-settings {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: #fff3e0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid #ff9800;
+            transition: all 0.3s ease;
+        }
+
+        .question-shuffle-settings.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Show question shuffle settings only in exam mode */
+        body.exam-mode .question-shuffle-settings {
+            display: flex;
+        }
+
+        .question-count-settings {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: #e3f2fd;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid #2196f3;
+            transition: all 0.3s ease;
+        }
+
+        .question-count-settings.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Show question count settings only in exam mode */
+        body.exam-mode .question-count-settings {
+            display: flex;
+        }
+
+        .timer-input, .count-input {
+            width: 60px;
+            padding: 5px 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .timer-label, .count-label, .shuffle-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .timer-start-btn, .count-reset-btn, .shuffle-toggle-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .timer-start-btn:hover, .count-reset-btn:hover, .shuffle-toggle-btn:hover {
+            background: #218838;
+        }
+
+        .count-reset-btn {
+            background: #2196f3;
+        }
+
+        .count-reset-btn:hover {
+            background: #1976d2;
+        }
+
+        .shuffle-toggle-btn {
+            background: #ff9800;
+        }
+
+        .shuffle-toggle-btn:hover {
+            background: #f57c00;
+        }
+
+        .shuffle-toggle-btn.active {
+            background: #4caf50;
+        }
+
+        .shuffle-toggle-btn.active:hover {
+            background: #388e3c;
+        }
+
+        .timer {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 25px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #d32f2f;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Timer */
+        body.exam-mode .timer {
+            background: #ffcdd2;
+            border: 1px solid #f44336;
+            border-radius: 8px;
+            padding: 8px 15px;
+            color: #d32f2f;
+            font-size: 14px;
+        }
+
+        .timer.active {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        /* Exam Mode Active Timer */
+        body.exam-mode .timer.active {
+            background: #ffcdd2;
+            border-color: #f44336;
+            color: #d32f2f;
+        }
+
+        /* NEW: Question Shuffle Display */
+        .question-shuffle-display {
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            color: #e65100;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        body.exam-mode .question-shuffle-display {
+            display: flex;
+        }
+
+        .question-shuffle-display.active {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        /* NEW: Question Count Display */
+        .question-count-display {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            color: #1565c0;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        body.exam-mode .question-count-display {
+            display: flex;
+        }
+
+        .timer-reset-btn, .shuffle-reset-btn, .count-reset-display-btn {
+            background: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .timer-reset-btn.visible,
+        .shuffle-reset-btn.visible,
+        .count-reset-display-btn.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .timer-reset-btn:hover,
+        .shuffle-reset-btn:hover,
+        .count-reset-display-btn:hover {
+            background: #e64a19;
+        }
+
+        .count-reset-display-btn {
+            background: #2196f3;
+        }
+
+        .count-reset-display-btn:hover {
+            background: #1976d2;
+        }
+
+        .timer-expired-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .timer-expired-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .timer-expired-message {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .result-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .result-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .result-message {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .result-message.passed {
+            border-left: 5px solid #4caf50;
+        }
+
+        .result-message.failed {
+            border-left: 5px solid #f44336;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .result-title.passed {
+            color: #4caf50;
+        }
+
+        .result-title.failed {
+            color: #f44336;
+        }
+
+        .result-stats {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .exit-btn {
+            background: #37474f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .exit-btn:hover {
+            background: #455a64;
+        }
+
+        /* Exam Mode Exit Button */
+        body.exam-mode .exit-btn {
+            background: #2c3e50;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Main Content */
+        body.exam-mode .main-content {
+            grid-template-columns: 1fr;
+            gap: 0;
+            background: #f5f5f5;
+        }
+
+        body.exam-mode.dark-mode .main-content {
+            background: #1a1a2e;
+        }
+
+        .quiz-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease, all 0.3s ease;
+        }
+
+        /* Exam Mode Quiz Section */
+        body.exam-mode .quiz-section {
+            background: #f5f5f5;
+            border-radius: 0;
+            padding: 20px;
+            box-shadow: none;
+            margin-bottom: 0;
+        }
+
+        body.exam-mode.dark-mode .quiz-section {
+            background: #1a1a2e;
+        }
+
+        .quiz-section.timer-expired {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .question-header {
+            background: #3f51b5;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Question Header */
+        body.exam-mode .question-header {
+            background: #0D0A69;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            justify-content: space-between;
+        }
+
+        .question-number {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Question Number */
+        body.exam-mode .question-number {
+            background: #34495e;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 14px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .question-counter {
+            background: #4caf50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* Exam Mode Question Counter */
+        body.exam-mode .question-counter {
+            display: inline-block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Exam Mode Question Text - NO OVERLAPPING NUMBER */
+        body.exam-mode .question-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        body.exam-mode.dark-mode .question-text {
+            color: #e0e0e0;
+        }
+
+        .answers {
+            space-y: 12px;
+        }
+
+        .answer-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Exam Mode Answer Options */
+        body.exam-mode .answer-option {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 0;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        body.exam-mode.dark-mode .answer-option {
+            background: #40407a;
+            border-color: #706fd3;
+            color: #e0e0e0;
+        }
+
+        .answer-option:hover:not(.disabled) {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            transform: translateY(-2px);
+        }
+
+        /* Exam Mode Answer Option Hover */
+        body.exam-mode .answer-option:hover:not(.disabled) {
+            background: #e8f4fd;
+            border-color: #2196f3;
+            transform: none;
+        }
+
+        body.exam-mode.dark-mode .answer-option:hover:not(.disabled) {
+            background: #5352ed;
+            border-color: #3742fa;
+        }
+
+        .answer-option.selected {
+            background: #2196f3;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        /* Exam Mode Selected Answer */
+        body.exam-mode .answer-option.selected {
+            background: #2196f3;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        .answer-option.correct {
+            background: #4caf50;
+            color: white;
+            border-color: #388e3c;
+        }
+
+        .answer-option.incorrect {
+            background: #f44336;
+            color: white;
+            border-color: #d32f2f;
+        }
+
+        .answer-option.correct-answer-mode {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+            font-weight: 600;
+        }
+
+        .answer-option.other-answer-mode {
+            background: #f5f5f5;
+            color: #757575;
+            border: 1px solid #e0e0e0;
+            opacity: 0.7;
+        }
+
+        .answer-option.disabled {
+            cursor: not-allowed;
+        }
+
+        .answer-option.timer-expired {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .option-label {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        /* Exam Mode Option Label */
+        body.exam-mode .option-label {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            background: white;
+            font-size: 0;
+            position: relative;
+        }
+
+        body.exam-mode .answer-option.selected .option-label {
+            background: #2196f3;
+            border-color: #2196f3;
+        }
+
+        body.exam-mode .answer-option.selected .option-label::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .answer-option.selected .option-label,
+        .answer-option.correct .option-label,
+        .answer-option.incorrect .option-label {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .option-text {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Navigation */
+        body.exam-mode .navigation {
+            justify-content: flex-start;
+            gap: 15px;
+            border-top: none;
+            margin-top: 20px;
+            padding-top: 0;
+        }
+
+        .nav-btn {
+            background: #3f51b5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        /* Exam Mode Navigation Buttons */
+        body.exam-mode .nav-btn {
+            background: #2196f3;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background: #303f9f;
+        }
+
+        body.exam-mode .nav-btn:hover {
+            background: #1976d2;
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Exam Mode Sidebar - HIDE IN EXAM MODE */
+        body.exam-mode .sidebar {
+            display: none;
+        }
+
+        .controls-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .mode-toggles {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .toggle-btn:hover {
+            background: #e9ecef;
+        }
+
+        .toggle-btn.active {
+            background: #3f51b5;
+            color: white;
+            border-color: #3f51b5;
+        }
+
+        .jump-to-question {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .jump-to-question label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .jump-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .jump-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .jump-btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .jump-btn:hover {
+            background: #1976d2;
+        }
+
+        .question-grid {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .grid-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+        }
+
+        .grid-item {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 12px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .grid-item:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .grid-item.current {
+            background: #3f51b5;
+            color: white;
+            border-color: #3f51b5;
+        }
+
+        .grid-item.answered {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+
+        .grid-item.unanswered {
+            background: #ff9800;
+            color: white;
+            border-color: #ff9800;
+        }
+
+        /* FIXED: SINGLE Exam Mode Question Grid - Navy Blue Header and White Background */
+        .exam-question-grid {
+            display: none;
+            margin-top: 20px;
+        }
+
+        body.exam-mode .exam-question-grid {
+            display: block;
+        }
+
+        .exam-grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #0D0A69;
+            padding: 10px 15px;
+            border-radius: 6px;
+            color: white;
+        }
+
+        .exam-grid-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .exam-grid-toggle {
+            background: #34495e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .exam-grid-toggle:hover {
+            background: #4a6741;
+        }
+
+        /* FIXED: White background for exam grid container */
+        .exam-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+            gap: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            background: white;
+            padding: 15px;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .exam-grid-container.collapsed {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            padding: 0;
+        }
+
+        /* FIXED: Exam Grid Items - Red color like reference image */
+        .exam-grid-item {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #c0392b;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 11px;
+            transition: all 0.3s;
+            background: #e74c3c;
+            color: white;
+        }
+
+        .exam-grid-item:hover {
+            background: #c0392b;
+        }
+
+        .exam-grid-item.current {
+            background: #3498db;
+            border-color: #2980b9;
+        }
+
+        /* Answered questions - Red background like in reference */
+        .exam-grid-item.answered {
+            background: #e74c3c;
+            border-color: #c0392b;
+        }
+
+        /* Unanswered questions - Red background like in reference */
+        .exam-grid-item.unanswered {
+            background: #e74c3c;
+            border-color: #c0392b;
+        }
+
+        /* FIXED: Hide mobile question dropdown in exam mode */
+        .mobile-question-dropdown {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        /* FIXED: Hide mobile dropdown in exam mode */
+        body.exam-mode .mobile-question-dropdown {
+            display: none !important;
+        }
+
+        .dropdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .dropdown-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .dropdown-arrow {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-arrow.expanded {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .dropdown-content.expanded {
+            max-height: 300px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .timer-section {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .quiz-section {
+                padding: 20px;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+
+            .answer-option {
+                padding: 12px 15px;
+                gap: 10px;
+            }
+
+            .option-label {
+                width: 25px;
+                height: 25px;
+                font-size: 12px;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .sidebar {
+                order: -1;
+            }
+
+            .controls-panel,
+            .question-grid {
+                padding: 15px;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+                gap: 6px;
+            }
+
+            .grid-item {
+                width: 35px;
+                height: 35px;
+                font-size: 11px;
+            }
+
+            /* Show mobile dropdown instead of sidebar grid in NON-EXAM mode only */
+            .question-grid {
+                display: none;
+            }
+
+            .mobile-question-dropdown {
+                display: block;
+            }
+
+            /* FIXED: Hide mobile dropdown in exam mode on mobile too */
+            body.exam-mode .mobile-question-dropdown {
+                display: none !important;
+            }
+
+            /* Exam Mode Mobile Adjustments */
+            body.exam-mode .container {
+                padding: 0;
+            }
+
+            body.exam-mode .header {
+                padding: 10px 15px;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            body.exam-mode .timer-section {
+                gap: 10px;
+            }
+
+            body.exam-mode .quiz-section {
+                padding: 15px;
+            }
+
+            body.exam-mode .question-text {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            body.exam-mode .answer-option {
+                padding: 10px 12px;
+                margin-bottom: 6px;
+            }
+
+            body.exam-mode .option-label {
+                width: 18px;
+                height: 18px;
+            }
+
+            body.exam-mode .navigation {
+                flex-direction: row;
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            body.exam-mode .nav-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+                width: auto;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .title {
+                font-size: 18px;
+            }
+
+            body.exam-mode .title {
+                font-size: 14px;
+            }
+
+            .timer-input, .count-input {
+                width: 50px;
+                font-size: 12px;
+            }
+
+            .timer {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            body.exam-mode .timer {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .question-text {
+                font-size: 14px;
+            }
+
+            body.exam-mode .question-text {
+                font-size: 13px;
+            }
+
+            .answer-option {
+                padding: 10px 12px;
+            }
+
+            body.exam-mode .answer-option {
+                padding: 8px 10px;
+            }
+
+            .option-text {
+                font-size: 14px;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+                gap: 4px;
+            }
+
+            .grid-item {
+                width: 30px;
+                height: 30px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">ITC</div>
+            <div class="timer-section">
+                <div class="timer-settings">
+                    <span class="timer-label">Minutes:</span>
+                    <input type="number" class="timer-input" id="minutesInput" value="30" min="1" max="180">
+                    <span class="timer-label">Seconds:</span>
+                    <input type="number" class="timer-input" id="secondsInput" value="0" min="0" max="59">
+                    <button class="timer-start-btn" onclick="startTimer()">Start</button>
+                </div>
+                
+                <!-- NEW: Question Shuffle Settings for Exam Mode -->
+                <div class="question-shuffle-settings">
+                    <span class="shuffle-label">🔀 Shuffle Questions:</span>
+                    <button class="shuffle-toggle-btn" id="shuffleToggleBtn" onclick="toggleQuestionShuffle()">Enable</button>
+                </div>
+                
+                <div class="question-count-settings">
+                    <span class="count-label">Questions:</span>
+                    <input type="number" class="count-input" id="questionCountInput" value="200" min="1" max="200">
+                    <span class="count-label">/ 200</span>
+                    <button class="count-reset-btn" onclick="setQuestionCount()">Set</button>
+                </div>
+                
+                <div class="timer" id="timer">
+                    <span>⏰</span>
+                    <span id="timerDisplay">No timer set</span>
+                    <button class="timer-reset-btn" id="timerResetBtn" onclick="resetTimer()">Reset</button>
+                </div>
+                
+                <!-- NEW: Question Shuffle Display -->
+                <div class="question-shuffle-display" id="questionShuffleDisplay">
+                    <span>🔀</span>
+                    <span id="shuffleDisplayText">Shuffle: Off</span>
+                    <button class="shuffle-reset-btn" id="shuffleResetBtn" onclick="resetQuestionShuffle()">Reset</button>
+                </div>
+                
+                <!-- NEW: Question Count Display -->
+                <div class="question-count-display" id="questionCountDisplay">
+                    <span>📊</span>
+                    <span id="countDisplayText">200 / 200</span>
+                    <button class="count-reset-display-btn" id="countResetDisplayBtn" onclick="resetQuestionCount()">Reset</button>
+                </div>
+                
+                <button class="exit-btn" onclick="exitQuiz()">
+                    <span>🚪</span>
+                    <span id="exitBtnText">Exit</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="quiz-section" id="quizSection">
+                <div class="question-header">
+                    <div class="question-number" id="questionNumber">Question 1</div>
+                    <div class="question-counter" id="questionCounter">1 / 200</div>
+                </div>
+                
+                <div class="question-text" id="questionText">
+                    Loading question...
+                </div>
+                
+                <div class="answers" id="answersContainer">
+                    <!-- Answer options will be populated by JavaScript -->
+                </div>
+                
+                <div class="navigation">
+                    <button class="nav-btn" id="prevBtn" onclick="previousQuestion()" disabled>Previous</button>
+                    <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+                    <button class="nav-btn" id="finishBtn" onclick="finishQuiz()" style="display: none;">Finish</button>
+                    <button class="nav-btn" id="submitBtn" onclick="finishQuiz()" style="display: none;">Submit</button>
+                </div>
+
+                <!-- FIXED: Mobile Question Dropdown - HIDDEN IN EXAM MODE -->
+                <div class="mobile-question-dropdown" id="mobileQuestionDropdown">
+                    <div class="dropdown-header" onclick="toggleMobileDropdown()">
+                        <div class="dropdown-title">Question Navigator</div>
+                        <div class="dropdown-arrow" id="dropdownArrow">▼</div>
+                    </div>
+                    <div class="dropdown-content" id="dropdownContent">
+                        <div class="grid-container" id="mobileQuestionGrid">
+                            <!-- Mobile question grid will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FIXED: SINGLE Exam Mode Question Grid with Navy Blue Header and White Background -->
+                <div class="exam-question-grid" id="examQuestionGrid">
+                    <div class="exam-grid-header">
+                        <div class="exam-grid-title">Question Navigator</div>
+                        <button class="exam-grid-toggle" id="examGridToggle" onclick="toggleExamGrid()">Collapse</button>
+                    </div>
+                    <div class="exam-grid-container" id="examGridContainer">
+                        <!-- Exam mode question grid will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="controls-panel">
+                    <div class="controls-title">Quiz Controls</div>
+                    <div class="mode-toggles">
+                        <button class="toggle-btn" id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+                        <button class="toggle-btn" id="answerModeBtn" onclick="toggleAnswerMode()">💡 Answer Mode</button>
+                        <!-- NEW: Question Shuffle Toggle for Non-Exam Mode -->
+                        <button class="toggle-btn" id="questionShuffleModeBtn" onclick="toggleQuestionShuffleMode()">🔀 Shuffle Questions</button>
+                        <button class="toggle-btn" id="examModeBtn" onclick="toggleExamMode()">🎓 Simulate Exam Mode</button>
+                    </div>
+                    <div class="jump-to-question">
+                        <label for="jumpInput">Jump to Question:</label>
+                        <div class="jump-input-group">
+                            <input type="number" class="jump-input" id="jumpInput" min="1" max="200" placeholder="Enter question number">
+                            <button class="jump-btn" onclick="jumpToQuestionNumber()">Go</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-grid">
+                    <div class="grid-title">Question Navigator</div>
+                    <div class="grid-container" id="questionGrid">
+                        <!-- Question grid will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timer Expired Overlay -->
+    <div class="timer-expired-overlay" id="timerExpiredOverlay">
+        <div class="timer-expired-message">
+            <h2>⏰ Time's Up!</h2>
+            <p>The timer has expired. Your quiz has been automatically submitted.</p>
+            <button class="nav-btn" onclick="hideTimerExpiredOverlay()">Continue</button>
+        </div>
+    </div>
+
+    <!-- Result Overlay -->
+    <div class="result-overlay" id="resultOverlay">
+        <div class="result-message" id="resultMessage">
+            <div class="result-title" id="resultTitle">Quiz Completed!</div>
+            <div class="result-stats" id="resultStats">
+                <!-- Result statistics will be populated by JavaScript -->
+            </div>
+            <button class="nav-btn" onclick="hideResultOverlay()">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data
+        const questions = [
+        {
+            question: "Which of the following type of percussion is used to compare sounds in symmetrical sides of body?",
+            answers: [
+                { text: "comparative", correct: true },
+                { text: "topographic", correct: false },
+                { text: "direct", correct: false },
+                { text: "indirect", correct: false },
+                { text: "parallel", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following is normal skin color for adults ?",
+            answers: [
+                { text: "pale-pink", correct: true },
+                { text: "pale", correct: false },
+                { text: "red", correct: false },
+                { text: "yellowish", correct: false },
+                { text: "bluish", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following is best method to assess moisture of skin?",
+            answers: [
+                { text: "inspection-palpation", correct: true },
+                { text: "palpation-auscultation", correct: false },
+                { text: "palpation-percussion", correct: false },
+                { text: "percussion-auscultation", correct: false },
+                { text: "inspection-percussion", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following type of skin is typical for healthy person?",
+            answers: [
+                { text: "mild level of moisture", correct: true },
+                { text: "dry", correct: false },
+                { text: "oily", correct: false },
+                { text: "moist", correct: false },
+                { text: "high moist", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following respiratory rate is normal?",
+            answers: [
+                { text: "16-20 per min", correct: true },
+                { text: "10-12 per min", correct: false },
+                { text: "20-29 per min", correct: false },
+                { text: "30-45 per min", correct: false },
+                { text: "45-60 per min", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following terms define meaning of term\"auscultation\"?",
+            answers: [
+                { text: "hearing different breathing sounds", correct: true },
+                { text: "tapping of chest", correct: false },
+                { text: "inspection of chest", correct: false },
+                { text: "pressing of chest", correct: false },
+                { text: "pain region determining", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following features characterize hypersthenic type of constitution?",
+            answers: [
+                { text: "predominance of abdomen over chest", correct: true },
+                { text: "proportionality of limbs and torso", correct: false },
+                { text: "predominance of height over mass", correct: false },
+                { text: "small parenchymal organs", correct: false },
+                { text: "predominance of limbs over abdomen", correct: false },
+            ]
+        },
+        {
+            question: "Which intercostal space apex beat is located?",
+            answers: [
+                { text: "V", correct: true },
+                { text: "III", correct: false },
+                { text: "IV", correct: false },
+                { text: "VI", correct: false },
+                { text: "VII", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following answers demonstrates the absolute dullness of heart?",
+            answers: [
+                { text: "borders of heart not covered by lungs", correct: true },
+                { text: "borders of vascular bunch", correct: false },
+                { text: "truth borders of heart", correct: false },
+                { text: "location of apex beat", correct: false },
+                { text: "projection of valves on the chest wall", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following  are all points for cardiac auscultation?",
+            answers: [
+                { text: "Aortic, pulmonic, tricuspid, mitral, Erb's point", correct: true },
+                { text: "Aortic, pulmonic, tricuspid, mitral", correct: false },
+                { text: "Aortic, pulmonic, tricuspid, Erb's point", correct: false },
+                { text: "Aortic, pulmonic, mitral, Erb's point", correct: false },
+                { text: "Aortic, tricuspid, mitral, Erb's point", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following arteries is palpable for pulse examination?",
+            answers: [
+                { text: "a. radialis", correct: true },
+                { text: "a. mammaria interna", correct: false },
+                { text: "a. axillaris", correct: false },
+                { text: "a. subclavia", correct: false },
+                { text: "a. ulnaris", correct: false },
+            ]
+        },
+        {
+            question: "What is the name of the device that is used to take an ECG?",
+            answers: [
+                { text: "Electrocardiograph", correct: true },
+                { text: "Stethoscope", correct: false },
+                { text: "Ophthalmoscope", correct: false },
+                { text: "Otoscope", correct: false },
+                { text: "Sphygmomanometer", correct: false },
+            ]
+        },
+        {
+            question: "Which term for heart rate more than 100 beats per minute?",
+            answers: [
+                { text: "Tachycardia", correct: true },
+                { text: "Hypertension", correct: false },
+                { text: "Arrhythmia", correct: false },
+                { text: "Bradycardia", correct: false },
+                { text: "Hypotension", correct: false },
+            ]
+        },
+        {
+            question: "In which of the following areas gallbladder is projected onto anterior abdominal wall?",
+            answers: [
+                { text: "right hypochondriac", correct: true },
+                { text: "epigastric", correct: false },
+                { text: "left hypochondriac", correct: false },
+                { text: "left lumbar", correct: false },
+                { text: "umbilical", correct: false },
+            ]
+        },
+        {
+            question: "What is the normal size of the liver on right midclavicular line according to Kurlov?",
+            answers: [
+                { text: "9 cm", correct: true },
+                { text: "7 cm", correct: false },
+                { text: "5 cm", correct: false },
+                { text: "6 cm", correct: false },
+                { text: "4 cm", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following substance chief cells of the glands of the stomach secrete?",
+            answers: [
+                { text: "Pepsinogen", correct: true },
+                { text: "Hydrochloric acid", correct: false },
+                { text: "Mucus", correct: false },
+                { text: "Inorganic substances", correct: false },
+                { text: "Electrolytes", correct: false },
+            ]
+        },
+        {
+            question: "During palpating the abdomen, dotor should begin with:",
+            answers: [
+                { text: "from painless area", correct: true },
+                { text: "with painful area", correct: false },
+                { text: "from epigastric area", correct: false },
+                { text: "from the area most convenient for patient", correct: false },
+                { text: "from any area", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following parts are distinguished in gallbladder?",
+            answers: [
+                { text: "bottom, body, neck", correct: true },
+                { text: "cardiac part, bottom, body, pyloric part", correct: false },
+                { text: "head, body, tail", correct: false },
+                { text: "right lobe, left lobe", correct: false },
+                { text: "head, neck, body", correct: false },
+            ]
+        },
+        {
+            question: "Where is the cecum on palpation?",
+            answers: [
+                { text: "in the right iliac region", correct: true },
+                { text: "in the left iliac region", correct: false },
+                { text: "epigastric region", correct: false },
+                { text: "left subcostal region", correct: false },
+                { text: "in the right subcostal region", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following organs is the largest digestive gland?",
+            answers: [
+                { text: "liver", correct: true },
+                { text: "gallbladder", correct: false },
+                { text: "the spleen", correct: false },
+                { text: "the pancreas", correct: false },
+                { text: "the small intestine", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following type of percussion used to determine apex of lungs?",
+            answers: [
+                { text: "topographic", correct: true },
+                { text: "indirect", correct: false },
+                { text: "comparative", correct: false },
+                { text: "direct", correct: false },
+                { text: "parallel", correct: false },
+            ]
+        },
+        {
+            question: "The following information is recorded in the health history. “The patient completed 7 grade. He currently lives with his wife and children. He works as an architect for a private company. He eats regularly”. Which of the history part these data belong to?",
+            answers: [
+                { text: "personal and social history", correct: true },
+                { text: "chief complaints", correct: false },
+                { text: "present illness", correct: false },
+                { text: "general survey", correct: false },
+                { text: "past history", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following options is defined by palpation?",
+            answers: [
+                { text: "elasticity of chest", correct: true },
+                { text: "type of chest", correct: false },
+                { text: "respiratory noises", correct: false },
+                { text: "chest expansion", correct: false },
+                { text: "breath sounds", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following is normal percussion sound over chest?",
+            answers: [
+                { text: "resonant", correct: true },
+                { text: "vesicular", correct: false },
+                { text: "hyperresonant", correct: false },
+                { text: "tympanic", correct: false },
+                { text: "bronchial", correct: false },
+            ]
+        },
+        {
+            question: "In policlinics during physical examination of patient doctor said about presence of underweight. Which of the following range of body mass index characterizes this conclusion?",
+            answers: [
+                { text: "less than 18,5 kg/m2", correct: true },
+                { text: "30-34,9 kg/m2", correct: false },
+                { text: "25-29,9kg/m2", correct: false },
+                { text: "18,5-24,9kg/m2", correct: false },
+                { text: "more than 40 kg/m2", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following options characterizes obesity II degree?",
+            answers: [
+                { text: "35-39,9 kg/m2", correct: true },
+                { text: "25-29,9kg/m2", correct: false },
+                { text: "less than 18,5 kg/m2", correct: false },
+                { text: "30-34,9 kg/m2", correct: false },
+                { text: "more than 40 kg/m2", correct: false },
+            ]
+        },
+        {
+            question: "How many centimeters is normal mobility of lung on right midclavicular line?",
+            answers: [
+                { text: "4-6 cm", correct: true },
+                { text: "2-3 cm", correct: false },
+                { text: "6-8 cm", correct: false },
+                { text: "1-2 cm", correct: false },
+                { text: "8-10 cm", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following line is maximal mobility on?",
+            answers: [
+                { text: "midaxillar", correct: true },
+                { text: "midclavicular", correct: false },
+                { text: "scapular", correct: false },
+                { text: "parasternal", correct: false },
+                { text: "posterior axillar", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following line is impossible to determine inferior border of left lung on?",
+            answers: [
+                { text: "left parasternal", correct: true },
+                { text: "left vertebral", correct: false },
+                { text: "left midaxillar", correct: false },
+                { text: "left posterior axillar", correct: false },
+                { text: "left scapular", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following rib inferior border of lung located on anterior axillar line?",
+            answers: [
+                { text: "VII", correct: true },
+                { text: "V", correct: false },
+                { text: "VI", correct: false },
+                { text: "VIII", correct: false },
+                { text: "IX", correct: false },
+            ]
+        },
+        {
+            question: "А 30-year-old man is admitted to the hospital with respiratory disease. During physical examination doctor found a change in percussion sound over his left lung. Which rib is normal level of lower border of left lung on midaxillary line?",
+            answers: [
+                { text: "VIII", correct: true },
+                { text: "VII", correct: false },
+                { text: "V", correct: false },
+                { text: "VI", correct: false },
+                { text: "IV", correct: false },
+            ]
+        },
+        {
+            question: "Patient P., 28 years old. Complains of scratching, pain when swallowing, a feeling of a foreign body in the throat. The examination revealed enlarged cervical lymph nodes. Which groups of lymph nodes are often palpated normally?",
+            answers: [
+                { text: "submandibular", correct: true },
+                { text: "cervical", correct: false },
+                { text: "popliteal", correct: false },
+                { text: "submental", correct: false },
+                { text: "subclavian", correct: false },
+            ]
+        },
+        {
+            question: "A 30-year-old woman was hospitalized with a respiratory illness. What is the sign of the abdominal type of breathing will be during the examination",
+            answers: [
+                { text: "breathing is carried out by contraction of the muscles of the abdominal wall", correct: true },
+                { text: "breathing is carried out by contraction of the muscles of the diaphragm", correct: false },
+                { text: "breathing is carried out by contraction of intercostal muscles", correct: false },
+                { text: "breathing is carried out by reducing the internal oblique abdominal muscles", correct: false },
+                { text: "breathing is carried out by contraction of intercostal muscles and diaphragm", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following cervical vertebra is upper border of lung from back side?",
+            answers: [
+                { text: "VII", correct: true },
+                { text: "VI", correct: false },
+                { text: "V", correct: false },
+                { text: "IV", correct: false },
+                { text: "III", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following is normal width of Krenig?",
+            answers: [
+                { text: "6-8cm", correct: true },
+                { text: "4-5cm", correct: false },
+                { text: "3-4 cm", correct: false },
+                { text: "8-9cm", correct: false },
+                { text: "11-15cm", correct: false },
+            ]
+        },
+        {
+            question: "From where doctor should start tapping for determining upper border of lung on anterior surface?",
+            answers: [
+                { text: "middle of claviculae", correct: true },
+                { text: "3-4 cm above claviculae", correct: false },
+                { text: "III intercostal space", correct: false },
+                { text: "II intercostal space", correct: false },
+                { text: "From sternal notch", correct: false },
+            ]
+        },
+        {
+            question: "which of following is possible to listen to tracheal breath sound?",
+            answers: [
+                { text: "above trachea", correct: true },
+                { text: "above scapulae", correct: false },
+                { text: "above apex of lungs", correct: false },
+                { text: "on anterior surface of thorax", correct: false },
+                { text: "interscapular region", correct: false },
+            ]
+        },
+        {
+            question: "which of following is possible to listen to bronchovesicular breath sound?",
+            answers: [
+                { text: "peristernal region", correct: true },
+                { text: "above scapulae", correct: false },
+                { text: "above apex of lungs", correct: false },
+                { text: "on lateral surface of thorax", correct: false },
+                { text: "above trachea", correct: false },
+            ]
+        },
+        {
+            question: "Which unit diastolic blood pressure is measured in?",
+            answers: [
+                { text: "mm Hg", correct: true },
+                { text: "cm Ag", correct: false },
+                { text: "mm Ag", correct: false },
+                { text: "Pa", correct: false },
+                { text: "sec", correct: false },
+            ]
+        },
+        {
+            question: "Which variant is normal location of upper relative border of heart?",
+            answers: [
+                { text: "III rib", correct: true },
+                { text: "III intercostal space", correct: false },
+                { text: "IV rib", correct: false },
+                { text: "IV intercostal space", correct: false },
+                { text: "V intercostal space", correct: false },
+            ]
+        },
+        {
+            question: "Which degree is mild arterial hypertension?",
+            answers: [
+                { text: "I", correct: true },
+                { text: "II", correct: false },
+                { text: "III", correct: false },
+                { text: "IV", correct: false },
+                { text: "isolated", correct: false },
+            ]
+        },
+        {
+            question: "Which position of the electrode is need for registration V3 chest lead for ECG?",
+            answers: [
+                { text: "halfway between V2 and V4", correct: true },
+                { text: "IV intercostal space at left sternal edge", correct: false },
+                { text: "IV intercostal space at right sternal edge", correct: false },
+                { text: "midclavicular line in the V intercostal space", correct: false },
+                { text: "anterior axillary line in the V intercostal space", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following term is used for high blood pressure?",
+            answers: [
+                { text: "Hypertension", correct: true },
+                { text: "Hypotension", correct: false },
+                { text: "Arrhythmia", correct: false },
+                { text: "Bradycardia", correct: false },
+                { text: "Tachycardia", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following is not determined by percussion?",
+            answers: [
+                { text: "Valves sounds", correct: true },
+                { text: "Relative borders of heart", correct: false },
+                { text: "Area of heart not covered by lungs", correct: false },
+                { text: "Width of vascular bunch", correct: false },
+                { text: "Absolute borders of heart", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following on ECG reflects the contraction of ventricles?",
+            answers: [
+                { text: "QRS", correct: true },
+                { text: "PR", correct: false },
+                { text: "PQ", correct: false },
+                { text: "ST", correct: false },
+                { text: "T", correct: false },
+            ]
+        },
+        {
+            question: "Which variant is determined as left border of heart absolute dullness?",
+            answers: [
+                { text: "1-2 cm medially from left relative dullness of heart", correct: true },
+                { text: "2-3 cm medially from relative dullness of heart", correct: false },
+                { text: "1-2 cm medially from left midclavicular line", correct: false },
+                { text: "on 1-2 cm laterally from left midclavicular line", correct: false },
+                { text: "on 1-2 cm laterally from relative dullness of heart", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following is normal width of vascular bunch?",
+            answers: [
+                { text: "5-6 cm", correct: true },
+                { text: "3-4 cm", correct: false },
+                { text: "1-2 cm", correct: false },
+                { text: "7-8 cm", correct: false },
+                { text: "9-10 cm", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following artery is not available for palpation?",
+            answers: [
+                { text: "A. coronary", correct: true },
+                { text: "A. brachialis", correct: false },
+                { text: "A. carotis", correct: false },
+                { text: "A. popliteal", correct: false },
+                { text: "A. dorsalis pedis", correct: false },
+            ]
+        },
+        {
+            question: "What is the category of blood pressure is 160/75 mmHg?",
+            answers: [
+                { text: "Isolated systolic hypertension", correct: true },
+                { text: "Normal", correct: false },
+                { text: "High-normal", correct: false },
+                { text: "I degree of arterial hypertension", correct: false },
+                { text: "Optimum", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following answers is related to I degree of arterial hypertension?",
+            answers: [
+                { text: "140-159 mm Hg/90-99 mm Hg", correct: true },
+                { text: "130-139 mm Hg/85-89 mm Hg", correct: false },
+                { text: "120-129 mm Hg/80-84 mm Hg", correct: false },
+                { text: "160-179 mm Hg/100-109 mm Hg", correct: false },
+                { text: "> 180 mm Hg/ >110 mm Hg", correct: false },
+            ]
+        },
+        {
+            question: "Which leads reflect septal wall of the left ventricle on ECG?",
+            answers: [
+                { text: "V1-V2", correct: true },
+                { text: "I, avL", correct: false },
+                { text: "V3-V4", correct: false },
+                { text: "II, III, avF", correct: false },
+                { text: "V5-V6", correct: false },
+            ]
+        },
+        {
+            question: "Which process of the heart reflects R- wave on ECG?",
+            answers: [
+                { text: "depolarization of ventricles", correct: true },
+                { text: "depolarization of left atrium", correct: false },
+                { text: "atrioventricular conduction", correct: false },
+                { text: "repolarization of atriums", correct: false },
+                { text: "depolarization of right atrium", correct: false },
+            ]
+        },
+        {
+            question: "What is the standard recording speed of ECG used for adults?",
+            answers: [
+                { text: "25 mm/sec", correct: true },
+                { text: "10 mm/sec", correct: false },
+                { text: "50 mm/sec", correct: false },
+                { text: "100 mm/sec", correct: false },
+                { text: "200 mm/sec", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following answers demonstrates the approximate normal sizes of the spleen?",
+            answers: [
+                { text: "width 4-6 cm, length 6-8 cm", correct: true },
+                { text: "width 2-3 cm, length 4-5 cm", correct: false },
+                { text: "width 3-5 cm, length 4-6 cm", correct: false },
+                { text: "width 2-4 cm, length 5-7 cm", correct: false },
+                { text: "width 5-8 cm, length 8-10 cm", correct: false },
+            ]
+        },
+        {
+            question: "What is the purpose of urinalysis according to Nechiporenko?",
+            answers: [
+                { text: "To determine the ratio of leukocytes and erythrocytes in 1 ml of urine", correct: true },
+                { text: "To determine the density of urine", correct: false },
+                { text: "To detect glucose and ketone bodies in the urine", correct: false },
+                { text: "To determinedensity of urine", correct: false },
+                { text: "To detect protein in the urinary tract", correct: false },
+            ]
+        },
+        {
+            question: "How many lines does doctor check during percussion of liver by Obraztsov?",
+            answers: [
+                { text: "5", correct: true },
+                { text: "4", correct: false },
+                { text: "3", correct: false },
+                { text: "2", correct: false },
+                { text: "1", correct: false },
+            ]
+        },
+        {
+            question: "Which factor is necessary for the absorption of vitamin B12?",
+            answers: [
+                { text: "Pepsin", correct: true },
+                { text: "Gastrin", correct: false },
+                { text: "Folic acid", correct: false },
+                { text: "Hydrochloric acid", correct: false },
+                { text: "Gastromucoprotein", correct: false },
+            ]
+        },
+        {
+            question: "Which indicator can be judged about kidney concentration function?",
+            answers: [
+                { text: "Urine relative density", correct: true },
+                { text: "Daily diuresis", correct: false },
+                { text: "Protein content in urine", correct: false },
+                { text: "Urine pH", correct: false },
+                { text: "The number of red blood cells in 1 ml of urine", correct: false },
+            ]
+        },
+        {
+            question: "Which type of physical examination doctor uses for assessment muscle tension on the anterior abdominal wall?",
+            answers: [
+                { text: "superficial palpation", correct: true },
+                { text: "deep sliding palpation", correct: false },
+                { text: "topographic percussion", correct: false },
+                { text: "comparative percussion", correct: false },
+                { text: "auscultation", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following is right sequence of urine formation stages?",
+            answers: [
+                { text: "filtration-reabsorption-secretion", correct: true },
+                { text: "filtration-secretion-reabsorption", correct: false },
+                { text: "reabsorption-secretion-filtration", correct: false },
+                { text: "reabsorption-filtration-secretion", correct: false },
+                { text: "secretion-reabsorption-filtration", correct: false },
+            ]
+        },
+        {
+            question: "Which type of physical examination doctor checks symptom of Pasternatsky ?",
+            answers: [
+                { text: "Percussion of kidney", correct: true },
+                { text: "Palpation of liver", correct: false },
+                { text: "Percussion of liver", correct: false },
+                { text: "Auscultation of abdomen", correct: false },
+                { text: "Palpation of kidney", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following hormones promotes the conversion of glycogen to glucose?",
+            answers: [
+                { text: "Glucagon", correct: true },
+                { text: "Insulin", correct: false },
+                { text: "Gastrin", correct: false },
+                { text: "Pepsin", correct: false },
+                { text: "Trypsin", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following gland has mixed secretion?",
+            answers: [
+                { text: "Pancreas", correct: true },
+                { text: "Parathyroid glands", correct: false },
+                { text: "Parotid gland", correct: false },
+                { text: "Liver", correct: false },
+                { text: "Thyroid gland", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following organs does not belong to the digestive tract?",
+            answers: [
+                { text: "gall bladder", correct: true },
+                { text: "oral cavity", correct: false },
+                { text: "the stomach", correct: false },
+                { text: "small intestine", correct: false },
+                { text: "large intestine", correct: false },
+            ]
+        },
+        {
+            question: "Which of the following organ disease indicate girdle pain in the upper abdomen?",
+            answers: [
+                { text: "Pancreas", correct: true },
+                { text: "Caecum", correct: false },
+                { text: "Stomach", correct: false },
+                { text: "liver stomach", correct: false },
+                { text: "Sigmoid colon", correct: false },
+            ]
+        },
+        {
+            question: "Which organ disease is urography used for?",
+            answers: [
+                { text: "Kidney", correct: true },
+                { text: "Heart", correct: false },
+                { text: "Intestine", correct: false },
+                { text: "Pancreas", correct: false },
+                { text: "Gallbladder", correct: false },
+            ]
+        },
+        {
+            question: "What is the normal maximum mobility of the lower liver during inhalation?",
+            answers: [
+                { text: "1-1,5 cm", correct: true },
+                { text: "2 sm", correct: false },
+                { text: "3 sm", correct: false },
+                { text: "4 sm", correct: false },
+                { text: "5 sm", correct: false },
+            ]
+        },
+        {
+            question: "What method is most effective in the study of the esophagus?",
+            answers: [
+                { text: "Esophagogastroduodenoscopy", correct: true },
+                { text: "Ultrasound scan", correct: false },
+                { text: "X-ray", correct: false },
+                { text: "Percussion", correct: false },
+                { text: "Auscultation", correct: false },
+            ]
+        },
+        {
+            question: "Which line is the first in percussion of liver according to Kurlov?",
+            answers: [
+                { text: "right midclavicular", correct: true },
+                { text: "anterior midline", correct: false },
+                { text: "left midclavicular", correct: false },
+                { text: "left costal arch", correct: false },
+                { text: "right parasternal", correct: false },
+            ]
+        },
+        {
+            question: "What organ is located in the epigastric region?",
+            answers: [
+                { text: "left lobe of the liver", correct: true },
+                { text: "gallbladder", correct: false },
+                { text: "left kidney", correct: false },
+                { text: "transverse colon", correct: false },
+                { text: "bladder", correct: false },
+            ]
+        },
+        {
+            question: "What is splenomegaly?",
+            answers: [
+                { text: "enlargement of the spleen", correct: true },
+                { text: "liver enlargement", correct: false },
+                { text: "reducing of liver sizes", correct: false },
+                { text: "absence of the spleen", correct: false },
+                { text: "reducing the size of the spleen", correct: false },
+            ]
+        },
+        {
+            question: "A 65-year-old woman was hospitalized with heart disease. Position: sitting, legs were down. Which of the following posture is it?",
+            answers: [
+                { text: "forced", correct: true },
+                { text: "active", correct: false },
+                { text: "passive", correct: false },
+                { text: "dyspnea", correct: false },
+                { text: "medium", correct: false },
+            ]
+        },
+        {
+            question: "A 65-year-old woman was hospitalized. Consciousness: delaying answering the questions, weakened reaction to verbal and painful irritations. Which of the following consciousness level is it?",
+            answers: [
+                { text: "stupor", correct: true },
+                { text: "clear", correct: false },
+                { text: "sopor", correct: false },
+                { text: "coma", correct: false },
+                { text: "medium", correct: false },
+            ]
+        },
+        {
+            question: "A 65-year-old woman was hospitalized. Consciousness: not answering the questions, no reaction to verbal irritation, only react to pain. Which of the following consciousness level is it?",
+            answers: [
+                { text: "sopor", correct: true },
+                { text: "clear", correct: false },
+                { text: "stupor", correct: false },
+                { text: "coma", correct: false },
+                { text: "medium", correct: false },
+            ]
+        },
+        {
+            question: "A female, 70 years old, came to hospital with fever, headache, jaw pain, pain intense along the course of the superficial temporal artery.  Which of the following location is temporale artery palpated?",
+            answers: [
+                { text: "in temporal fossa", correct: true },
+                { text: "in cubital fossa", correct: false },
+                { text: "in the armpit", correct: false },
+                { text: "on the head of the humerus", correct: false },
+                { text: "area  of the medial malleolus", correct: false },
+            ]
+        },
+        {
+            question: "A 43-year-old woman presented for examination with complaints of headache, tinnitus, nausea, and chest pain. Which borders are included in the definition of absolute dullness of the heart?",
+            answers: [
+                { text: "Upper, right, left", correct: true },
+                { text: "Upper, central, lower", correct: false },
+                { text: "Upper, right, vascular bunch", correct: false },
+                { text: "Right, lower, upper", correct: false },
+                { text: "Upper, right, lower", correct: false },
+            ]
+        },
+        {
+            question: "An 18-year-old girl came for examination. Which intercostal space is used as a reference point for auscultating the aortic valve?",
+            answers: [
+                { text: "Right second intercostal space", correct: true },
+                { text: "Left second intercostal space", correct: false },
+                { text: "Right fourth intercostal space", correct: false },
+                { text: "Left fourth intercostal space", correct: false },
+                { text: "Left fifth intercostal space", correct: false },
+            ]
+        },
+        {
+            question: "A 33-year-old sports man complained for the chest pain. Physical examination: apex beat of the heart in VI intercostal space. Where apex beat is displaced to?",
+            answers: [
+                { text: "downward", correct: true },
+                { text: "to the left", correct: false },
+                { text: "normal", correct: false },
+                { text: "to the right", correct: false },
+                { text: "upward", correct: false },
+            ]
+        },
+        {
+            question: "A 22-year-old woman came to medical checkup. Physical examination: doctor auscultated IV intercostal space on left sternal line. Which of the following valves doctor auscultated?",
+            answers: [
+                { text: "tricuspid valve", correct: true },
+                { text: "mitral valve", correct: false },
+                { text: "aortic valve", correct: false },
+                { text: "pulmonary valve", correct: false },
+                { text: "additional point for aortic valve", correct: false },
+            ]
+        },
+        {
+            question: "A 25-year-old man came to medical checkup. ECG was recorded. Interpretation: Rhythm sinus, regular. Heart rate – 75 beats per min. Electrical axis is normal.  Which of the following answers demonstrates your conclusion?",
+            answers: [
+                { text: "ECG is normal", correct: true },
+                { text: "sinus tachycardia", correct: false },
+                { text: "sinus bradycardia", correct: false },
+                { text: "sinus arrhythmia", correct: false },
+                { text: "blockage", correct: false },
+            ]
+        },
+        {
+            question: "A 48-year-old man complained for headache. Physical examination: level of blood pressure - 148/92 mm Hg. Which of the following categories of arterial hypertension it is related to?",
+            answers: [
+                { text: "mild", correct: true },
+                { text: "moderate", correct: false },
+                { text: "severe", correct: false },
+                { text: "isolated", correct: false },
+                { text: "non-isolated", correct: false },
+            ]
+        },
+        {
+            question: "A 35-year-old man came to medical checkup. ECG was recorded. Rhythm sinus, regular. Which of the following demonstrates sinus rhythm?",
+            answers: [
+                { text: "presence of positive P-wave", correct: true },
+                { text: "presence of negative P-wave", correct: false },
+                { text: "absence of P-wave", correct: false },
+                { text: "presence of positive T-wave", correct: false },
+                { text: "presence of negative T-wave", correct: false },
+            ]
+        },
+        {
+            question: "A 20-year-old man came to medical checkup. Physical examination: sounds of the heart are normal. Which sound we can observe in pathological cases only?",
+            answers: [
+                { text: "S4", correct: true },
+                { text: "S2", correct: false },
+                { text: "S3", correct: false },
+                { text: "S1", correct: false },
+                { text: "S1, S2", correct: false },
+            ]
+        },
+        {
+            question: "A 48-year-old man came to medical checkup. Physical examination: according to Kurlov’s method  doctor percussed the liver of the patient along the median line. Value is normal. Which of the following answers is more correct?",
+            answers: [
+                { text: "8 cm", correct: true },
+                { text: "10 cm", correct: false },
+                { text: "9 cm", correct: false },
+                { text: "11 cm", correct: false },
+                { text: "7 cm", correct: false },
+            ]
+        },
+        {
+            question: "A 32-year-old man came to medical checkup. Physical examination: according to Kurlov’s method doctor percussed the spleen of the patient. Which type of percussion doctor used?",
+            answers: [
+                { text: "Quiet percussion", correct: true },
+                { text: "Quietest percussion", correct: false },
+                { text: "Middle strength percussion", correct: false },
+                { text: "Loud percussion", correct: false },
+                { text: "Loudest percussion", correct: false },
+            ]
+        },
+        {
+            question: "A 34-year-old man came to medical checkup. Physical examination: according to Kurlov’s method doctor percussed the spleen of the patient. Which of the following answers demonstrates normal longitudinal size of spleen?",
+            answers: [
+                { text: "6-8 cm", correct: true },
+                { text: "3-4 cm", correct: false },
+                { text: "4-5 cm", correct: false },
+                { text: "5-6 cm", correct: false },
+                { text: "2-3 cm", correct: false },
+            ]
+        },
+        {
+            question: "A 35-year-old man came to medical checkup. Physical examination: during palpation cecum and appendix are without changes. Which of the following regions of the abdomen doctor checked?",
+            answers: [
+                { text: "Right iliac region", correct: true },
+                { text: "Left hypochondriac region", correct: false },
+                { text: "Umbilical region", correct: false },
+                { text: "Right hypochondriac region", correct: false },
+                { text: "Left iliac region", correct: false },
+            ]
+        },
+        {
+            question: "A 45-year-old man came to medical checkup. Physical examination: according to Kurlov’s method doctor percussed lower border of the liver along the right midclavicular line. In which of the following directions sound changes on the lower edge?",
+            answers: [
+                { text: "From tympanic to dull sound", correct: true },
+                { text: "From dullness to resonant sound", correct: false },
+                { text: "From dullness to tympanic sound", correct: false },
+                { text: "From resonance to dull sound", correct: false },
+                { text: "From relative dullness to absolute dull sound", correct: false },
+            ]
+        },
+        {
+            question: "What parameters determine the viability of a newborn?",
+            answers: [
+                { text: "Gestational age 22 weeks, body weight 500 gram", correct: true },
+                { text: "Gestational age 24 weeks, body weight 500 gram", correct: false },
+                { text: "Gestational age 28 weeks body weight 1500 gram", correct: false },
+                { text: "Gestational age 20 weeks body weight 400 gram", correct: false },
+                { text: "Gestational age 18 weeks body weight 500 gram", correct: false },
+            ]
+        },
+        {
+            question: "The late neonatal period is determined by the timing:",
+            answers: [
+                { text: "since 23 week of gestation till birth", correct: true },
+                { text: "since 18 week of gestation till birth", correct: false },
+                { text: "since 28 week of gestation till birth", correct: false },
+                { text: "since 18 week of gestation till 28 week", correct: false },
+                { text: "since 28 week of gestation till 32 week", correct: false },
+            ]
+        },
+        {
+            question: "How long is Infant period lasted?",
+            answers: [
+                { text: "365days", correct: true },
+                { text: "367days", correct: false },
+                { text: "376days", correct: false },
+                { text: "388days", correct: false },
+                { text: "398days", correct: false },
+            ]
+        },
+        {
+            question: "Pediatrics is a science of",
+            answers: [
+                { text: "kids disesases", correct: true },
+                { text: "animals", correct: false },
+                { text: "adults", correct: false },
+                { text: "plants", correct: false },
+                { text: "insects", correct: false },
+            ]
+        },
+        {
+            question: "The increase in a child&apos;s height in 1 year of life is about:",
+            answers: [
+                { text: "24-25 cm", correct: true },
+                { text: "10-15 cm", correct: false },
+                { text: "18-20 cm", correct: false },
+                { text: "28-32 cm", correct: false },
+                { text: "34-36 cm", correct: false },
+            ]
+        },
+        {
+            question: "By the age of 12 months, the child&apos;s body length reaches an average of:",
+            answers: [
+                { text: "74-75 cm", correct: true },
+                { text: "54-58 cm", correct: false },
+                { text: "60-65 cm", correct: false },
+                { text: "80-85 cm", correct: false },
+                { text: "94-100 cm", correct: false },
+            ]
+        },
+        {
+            question: "The average annual increase of body length in children from 3 till 10 years is about:",
+            answers: [
+                { text: "5 cm", correct: true },
+                { text: "7 cm", correct: false },
+                { text: "9 cm", correct: false },
+                { text: "2 cm", correct: false },
+                { text: "3cm", correct: false },
+            ]
+        },
+        {
+            question: "What do you use for assesment of  growth?",
+            answers: [
+                { text: "growtth chart", correct: true },
+                { text: "ballard scale", correct: false },
+                { text: "apgar score", correct: false },
+                { text: "glasgow scale", correct: false },
+                { text: "pain scale", correct: false },
+            ]
+        },
+        {
+            question: "What do you use for measurement of the height in infants ?",
+            answers: [
+                { text: "infantometer", correct: true },
+                { text: "electronic scale", correct: false },
+                { text: "stadiometer", correct: false },
+                { text: "cm lenth", correct: false },
+                { text: "finger scale", correct: false },
+            ]
+        },
+        {
+            question: "What do use for mesurement of the height in 5years old baby?",
+            answers: [
+                { text: "stadiometer", correct: true },
+                { text: "cm lenth", correct: false },
+                { text: "finger scale", correct: false },
+                { text: "infantometer", correct: false },
+                { text: "electronic scale", correct: false },
+            ]
+        },
+        {
+            question: "What is the name of study of the period child intrauterine development?",
+            answers: [
+                { text: "Prenatal history", correct: true },
+                { text: "Postnatal history", correct: false },
+                { text: "Perinatal history", correct: false },
+                { text: "Natal history", correct: false },
+                { text: "Infant history", correct: false },
+            ]
+        },
+        {
+            question: "A child born at 38-40 weeks of gestation is called as",
+            answers: [
+                { text: "Term baby", correct: true },
+                { text: "Preterm baby", correct: false },
+                { text: "Postterm baby", correct: false },
+                { text: "Undeterm baby", correct: false },
+                { text: "Fetus", correct: false },
+            ]
+        },
+        {
+            question: "At what age does a child have his first teeth?",
+            answers: [
+                { text: "5-6 months", correct: true },
+                { text: "3-4 months", correct: false },
+                { text: "1,5 year", correct: false },
+                { text: "1 year", correct: false },
+                { text: "8-9 months", correct: false },
+            ]
+        },
+        {
+            question: "What are the age parameters of the early childhood period, which is often called to as toddlerhood?",
+            answers: [
+                { text: "1-3 years", correct: true },
+                { text: "2-5 years", correct: false },
+                { text: "8-10 months", correct: false },
+                { text: "3-5 years", correct: false },
+                { text: "12-24 months", correct: false },
+            ]
+        },
+        {
+            question: "The preschool period, typically spanning from ages",
+            answers: [
+                { text: "3 to 6 years", correct: true },
+                { text: "1 to 7 years", correct: false },
+                { text: "2 to 5 years", correct: false },
+                { text: "6 to 10 years", correct: false },
+                { text: "18-48 months", correct: false },
+            ]
+        },
+        {
+            question: "To indicate a growth delay or a decrease in potential growth a Height/length-for-age indicator shows below the:",
+            answers: [
+                { text: "5th percentile", correct: true },
+                { text: "7th percentile", correct: false },
+                { text: "10th percentile", correct: false },
+                { text: "15th percentile", correct: false },
+                { text: "25th percentile", correct: false },
+            ]
+        },
+        {
+            question: "To indicate an excessive growth a Height/length-for-age indicator shows above the:",
+            answers: [
+                { text: "95th percentile", correct: true },
+                { text: "85th percentile", correct: false },
+                { text: "75th percentile", correct: false },
+                { text: "65th percentile", correct: false },
+                { text: "55th percentile", correct: false },
+            ]
+        },
+        {
+            question: "What is the age for todler period",
+            answers: [
+                { text: "3 years", correct: true },
+                { text: "5 years", correct: false },
+                { text: "7 years", correct: false },
+                { text: "12 years", correct: false },
+                { text: "18 years", correct: false },
+            ]
+        },
+        {
+            question: "Primary puberty age for boys is :",
+            answers: [
+                { text: "12-14 years", correct: true },
+                { text: "16-18 years", correct: false },
+                { text: "20-22 years", correct: false },
+                { text: "25-27 years", correct: false },
+                { text: "30-35 years", correct: false },
+            ]
+        },
+        {
+            question: "Primary puberty age for girls is :",
+            answers: [
+                { text: "9-11 years", correct: true },
+                { text: "16-18 years", correct: false },
+                { text: "20-22 years", correct: false },
+                { text: "25-27 years", correct: false },
+                { text: "30-35 years", correct: false },
+            ]
+        },
+        {
+            question: "At what age the baby has double weight gain?",
+            answers: [
+                { text: "6 months", correct: true },
+                { text: "8 months", correct: false },
+                { text: "12 months", correct: false },
+                { text: "18 months", correct: false },
+                { text: "24 months", correct: false },
+            ]
+        },
+        {
+            question: "At what age the baby has tripple weight gain?",
+            answers: [
+                { text: "12 months", correct: true },
+                { text: "18 months", correct: false },
+                { text: "24 months", correct: false },
+                { text: "36 months", correct: false },
+                { text: "48 months", correct: false },
+            ]
+        },
+        {
+            question: "How often do you monitor the weight of the healthy  child till 1 year?",
+            answers: [
+                { text: "every month", correct: true },
+                { text: "every week", correct: false },
+                { text: "every year", correct: false },
+                { text: "ones two week", correct: false },
+                { text: "daily", correct: false },
+            ]
+        },
+        {
+            question: "How often do you monitor the weight of the mulnurished infant in the hospital?",
+            answers: [
+                { text: "daily", correct: true },
+                { text: "every week", correct: false },
+                { text: "every year", correct: false },
+                { text: "ones two week", correct: false },
+                { text: "ones a year", correct: false },
+            ]
+        },
+        {
+            question: "At birth, the head circumference of a child with microcephaly, as a rule, does not exceed:",
+            answers: [
+                { text: "25-27 cm", correct: true },
+                { text: "30-32 cm", correct: false },
+                { text: "35-37 cm", correct: false },
+                { text: "37-39 cm", correct: false },
+                { text: "41-42 cm", correct: false },
+            ]
+        },
+        {
+            question: "The chest circumference of a healthy newborn is usually 1-2 cm smaller than the head circumference and amounts:",
+            answers: [
+                { text: "32-34 cm", correct: true },
+                { text: "36-37 cm.", correct: false },
+                { text: "37-39 cm", correct: false },
+                { text: "28-30 cm", correct: false },
+                { text: "26-28 cm", correct: false },
+            ]
+        },
+        {
+            question: "A description of variations in the shape of individual body parts is called as:",
+            answers: [
+                { text: "Somatoscopy", correct: true },
+                { text: "Somatometry", correct: false },
+                { text: "Antropometry", correct: false },
+                { text: "Osteometry", correct: false },
+                { text: "Physiometry", correct: false },
+            ]
+        },
+        {
+            question: "A measurement of the human body and its parts is called as:",
+            answers: [
+                { text: "Somatometry", correct: true },
+                { text: "Somatoscopy", correct: false },
+                { text: "Antropometry", correct: false },
+                { text: "Osteometry", correct: false },
+                { text: "Physiometry", correct: false },
+            ]
+        },
+        {
+            question: "The newborn has physiological",
+            answers: [
+                { text: "hypertension of the flexor muscles", correct: true },
+                { text: "hypotension of the flexor muscles", correct: false },
+                { text: "hypertension of the extensor muscles", correct: false },
+                { text: "muscles normotonic", correct: false },
+                { text: "hypotension of flexor muscles and hypertension of extensor muscles", correct: false },
+            ]
+        },
+        {
+            question: "A mother reports sore nipples during breastfeeding. Examination shows cracked nipples but no signs of infection. What is the most likely cause?",
+            answers: [
+                { text: "Poor latch or incorrect positioning", correct: true },
+                { text: "The baby feeds too frequently", correct: false },
+                { text: "Maternal dehydration", correct: false },
+                { text: "Too much milk production", correct: false },
+                { text: "The baby is allergic to breast milk", correct: false },
+            ]
+        },
+        {
+            question: "A healthy 2-month-old infant is exclusively breastfed. The mother asks if the baby needs water during hot weather. What is the correct advice?",
+            answers: [
+                { text: "No additional water is needed", correct: true },
+                { text: "Replace one feed with fruit juice", correct: false },
+                { text: "Give sugar water to prevent dehydration", correct: false },
+                { text: "Give boiled water after every feed", correct: false },
+                { text: "Only give water if the baby cries frequently", correct: false },
+            ]
+        },
+        {
+            question: "A 1-week-old infant is breastfeeding, but the mother feels breasts are still full after feeding and the baby seems unsatisfied. What is the best first step?",
+            answers: [
+                { text: "Check the baby's attachment and positioning", correct: true },
+                { text: "Decrease feeding frequency", correct: false },
+                { text: "Give pacifier between feeds", correct: false },
+                { text: "Wait longer between feeds", correct: false },
+                { text: "Stop breastfeeding and switch to bottle feeding", correct: false },
+            ]
+        },
+        {
+            question: "A 4-month-old exclusively breastfed infant has normal growth and development. The grandmother insists to start complementary feeding. What should the healthcare worker explain?",
+            answers: [
+                { text: "Exclusive breastfeeding is recommended up to 6 months", correct: true },
+                { text: "Water and juices can be started at 3 months", correct: false },
+                { text: "Only fruit puree is allowed before 6 months", correct: false },
+                { text: "Start cereals now to improve sleep", correct: false },
+                { text: "Complementary foods should begin at 4 months", correct: false },
+            ]
+        },
+        {
+            question: "A mother is returning to work when her baby is 5 months old. She wants to continue breastfeeding. Which advice helps her maintain lactation?",
+            answers: [
+                { text: "Express and store breast milk for use during work hours", correct: true },
+                { text: "Give cow’s milk during the day", correct: false },
+                { text: "Reduce night feeding gradually", correct: false },
+                { text: "Skip feeds during work time", correct: false },
+                { text: "Stop breastfeeding once daily", correct: false },
+            ]
+        },
+        {
+            question: "A breastfeeding mother develops mastitis with mild fever and pain in one breast. What should she be advised?",
+            answers: [
+                { text: "Continue breastfeeding and apply warm compresses", correct: true },
+                { text: "Express milk only and discard it", correct: false },
+                { text: "Apply ice packs and avoid touching the breast", correct: false },
+                { text: "Stop feeding from affected breast only", correct: false },
+                { text: "Stop breastfeeding completely", correct: false },
+            ]
+        },
+        {
+            question: "A newborn is having difficulty latching. Examination reveals tongue-tie (ankyloglossia). What is the best explanation for the mother?",
+            answers: [
+                { text: "This may interfere with breastfeeding due to poor latch", correct: true },
+                { text: "The baby will outgrow it soon", correct: false },
+                { text: "It is unrelated to feeding", correct: false },
+                { text: "Breastfeeding should be stopped immediately", correct: false },
+                { text: "Tongue-tie improves milk flow", correct: false },
+            ]
+        },
+        {
+            question: "Children in this age range experience substantial advancements in their ability to learn, communicate, and interact with others. At what childhood period he can be referred to?",
+            answers: [
+                { text: "Preschool period", correct: true },
+                { text: "Early childhood period", correct: false },
+                { text: "School period", correct: false },
+                { text: "Childhood", correct: false },
+                { text: "Adolescence", correct: false },
+            ]
+        },
+        {
+            question: "At what age does a child have all his \"milk\" teeth?",
+            answers: [
+                { text: "2,5 year", correct: true },
+                { text: "1,5 year", correct: false },
+                { text: "4 year", correct: false },
+                { text: "3,5 year", correct: false },
+                { text: "8-10 months", correct: false },
+            ]
+        },
+        {
+            question: "Baby has weight -6500, height- 65 cm . Which age of the baby?",
+            answers: [
+                { text: "6 months", correct: true },
+                { text: "9 months", correct: false },
+                { text: "12 months", correct: false },
+                { text: "18 months", correct: false },
+                { text: "24 months", correct: false },
+            ]
+        },
+        {
+            question: "Baby 3 years old, his weight - 15 kg. Asses the baby.",
+            answers: [
+                { text: "obesity", correct: true },
+                { text: "malnutrtion", correct: false },
+                { text: "underweight", correct: false },
+                { text: "hypostature", correct: false },
+                { text: "normal", correct: false },
+            ]
+        },
+        {
+            question: "Baby 5 years old , her weight is 13 kg . Asses the baby.",
+            answers: [
+                { text: "underweight", correct: true },
+                { text: "obesity", correct: false },
+                { text: "normal", correct: false },
+                { text: "hypostature", correct: false },
+                { text: "hyperstature", correct: false },
+            ]
+        },
+        {
+            question: "A child has a height of 165 cm and a weight of 35 kg. His BMI is 12.9. To evaluate child&apos;s development using the Z-score:",
+            answers: [
+                { text: "equal \"-2\"", correct: true },
+                { text: "equal \"+2\"", correct: false },
+                { text: "equal \"0\"", correct: false },
+                { text: "equal \"-1\"", correct: false },
+                { text: "equal \"+2\"", correct: false },
+            ]
+        },
+        {
+            question: "A girl has a height of 116 cm and a weight of 28 kg. His BMI is 20.8. To evaluate child&apos;s development using the Z-score:",
+            answers: [
+                { text: "equal \"0\"", correct: true },
+                { text: "equal \"+2\"", correct: false },
+                { text: "equal \"-2\"", correct: false },
+                { text: "equal \"+1\"", correct: false },
+                { text: "equal \"-1\"", correct: false },
+            ]
+        },
+        {
+            question: "Mother has bacterial mastitis which step of management is recommended?",
+            answers: [
+                { text: "give antibiotics", correct: true },
+                { text: "give fluid", correct: false },
+                { text: "give dexamethasone", correct: false },
+                { text: "give paracetamol", correct: false },
+                { text: "give aspirine", correct: false },
+            ]
+        },
+        {
+            question: "Mother has viral hepatitis which management is recommended for baby if mother was treated?",
+            answers: [
+                { text: "continue to breasrfeed", correct: true },
+                { text: "avoid breastfeeding", correct: false },
+                { text: "start complementary feeding", correct: false },
+                { text: "give cows milk", correct: false },
+                { text: "give drugs", correct: false },
+            ]
+        },
+        {
+            question: "Mother has HIV but she has using antiretroviral therapy. What manangement is recommended?",
+            answers: [
+                { text: "give formula milk", correct: true },
+                { text: "continue breastfeeding", correct: false },
+                { text: "start complementary feeding", correct: false },
+                { text: "give cows milk", correct: false },
+                { text: "give drugs", correct: false },
+            ]
+        },
+        {
+            question: "Doctor prescribe to mother ampicilline for 5 days. Which management is recommended?",
+            answers: [
+                { text: "continue to breasrfeed", correct: true },
+                { text: "avoid breastfeeding", correct: false },
+                { text: "start complementary feeding", correct: false },
+                { text: "give cows milk", correct: false },
+                { text: "give drugs", correct: false },
+            ]
+        },
+        {
+            question: "A 6-month-old infant is given complementary foods, but the mother stopped breastfeeding. What is the best advice?",
+            answers: [
+                { text: "Feed only solid food without fluids", correct: true },
+                { text: "No need for breast milk after 6 months", correct: false },
+                { text: "Give only cow’s milk", correct: false },
+                { text: "Delay feeding until 8 months", correct: false },
+                { text: "Resume breastfeeding if possible", correct: false },
+            ]
+        },
+        {
+            question: "A 7-month-old infant is underweight. The mother feeds only plain rice porridge and some fruit puree. What should be your main advice to improve the child’s growth?",
+            answers: [
+                { text: "Add oil and mashed beans to porridge", correct: true },
+                { text: "Increase fruit puree", correct: false },
+                { text: "Give only breast milk", correct: false },
+                { text: "Delay complementary foods", correct: false },
+                { text: "Give only soup", correct: false },
+            ]
+        },
+        {
+            question: "What kind of gastrointestinal disorder can trigger the early onset of artificial nutrition in an infant?",
+            answers: [
+                { text: "Allergic enterocolitis", correct: true },
+                { text: "Gastroesophageal reflux", correct: false },
+                { text: "Pyloric stenosis", correct: false },
+                { text: "Belching", correct: false },
+                { text: "Constipation", correct: false },
+            ]
+        },
+        {
+            question: "By neonatal screening test fenilketonuria was found. Which management is recommended?",
+            answers: [
+                { text: "avoid protein", correct: true },
+                { text: "give protein", correct: false },
+                { text: "give supplements", correct: false },
+                { text: "avoid salt", correct: false },
+                { text: "give fats", correct: false },
+            ]
+        },
+        {
+            question: "What kind of diet should be used in a child with atopic dermatitis?",
+            answers: [
+                { text: "Hypoallergenic Infant Formula", correct: true },
+                { text: "Gluten-free Infant formula", correct: false },
+                { text: "Lactose-Free Infant Formula", correct: false },
+                { text: "Soy-Based Infant Formula", correct: false },
+                { text: "Partially fermented food", correct: false },
+            ]
+        },
+        {
+            question: "Who was the predecessor of D. Lister in obstetrics on the use of asepsis and antiseptics?",
+            answers: [
+                { text: "F.I. Zemmelweis", correct: true },
+                { text: "L. Auenbrugger", correct: false },
+                { text: "J.N. Korvisar", correct: false },
+                { text: "F.I. Inozemtsev", correct: false },
+                { text: "A.V. Sechenov", correct: false },
+            ]
+        },
+        {
+            question: "Who belongs the discovery of three blood groups to?",
+            answers: [
+                { text: "K. Landsteiner", correct: true },
+                { text: "J.Jansky", correct: false },
+                { text: "A. Decastello", correct: false },
+                { text: "A. Sturli", correct: false },
+                { text: "I. Hagen-Thorn", correct: false },
+            ]
+        },
+        {
+            question: "Who belongs the discovery of the laws of blood circulation to?",
+            answers: [
+                { text: "U. Garvey", correct: true },
+                { text: "D. Genter", correct: false },
+                { text: "L. Pasteur", correct: false },
+                { text: "R. Iering", correct: false },
+                { text: "S. Resch", correct: false },
+            ]
+        },
+        {
+            question: "Who first proposed to disinfect the hands of medical personnel before medical manipulations?",
+            answers: [
+                { text: "I. Zemmelweis", correct: true },
+                { text: "N.I. Pirogov", correct: false },
+                { text: "J. Lister", correct: false },
+                { text: "I.I. Janelidze", correct: false },
+                { text: "P.I. Dyakonov", correct: false },
+            ]
+        },
+        {
+            question: "What is the exogenous pathway of infection into the wound?",
+            answers: [
+                { text: "the external environment", correct: true },
+                { text: "teeth destroyed by caries", correct: false },
+                { text: "inflamed tonsils", correct: false },
+                { text: "affected kidneys", correct: false },
+                { text: "lymphogenic", correct: false },
+            ]
+        },
+        {
+            question: "Which organisms are still alive after low-level disinfection?",
+            answers: [
+                { text: "Mycobacterium", correct: true },
+                { text: "Hepatitis virus", correct: false },
+                { text: "Fungi", correct: false },
+                { text: "vegetative forms of bacteria", correct: false },
+                { text: "Epstein-barr virus", correct: false },
+            ]
+        },
+        {
+            question: "What are usually metal instruments in the surgical department sterilized by?",
+            answers: [
+                { text: "ultrasound", correct: true },
+                { text: "autoclaving", correct: false },
+                { text: "hot air", correct: false },
+                { text: "chemical method", correct: false },
+                { text: "firing", correct: false },
+            ]
+        },
+        {
+            question: "What are included for direct methods of sterility control?",
+            answers: [
+                { text: "seeding from items after sterilization", correct: true },
+                { text: "temperature control during sterilization", correct: false },
+                { text: "pressure control during sterilization", correct: false },
+                { text: "using special indicator strips", correct: false },
+                { text: "control of temperature, pressure and sterilization time", correct: false },
+            ]
+        },
+        {
+            question: "Which methods are included for the physical sterilization?",
+            answers: [
+                { text: "hot air and boiling", correct: true },
+                { text: "plasmic and ultrasonic", correct: false },
+                { text: "burning and plasmic", correct: false },
+                { text: "infrared and boiling", correct: false },
+                { text: "ultrasonic and radiation", correct: false },
+            ]
+        },
+        {
+            question: "Which method is used in chemical sterilization?",
+            answers: [
+                { text: "ethylene oxide", correct: true },
+                { text: "chloramine", correct: false },
+                { text: "sulema", correct: false },
+                { text: "hydrogen peroxide 3%", correct: false },
+                { text: "sodium bicarbonate", correct: false },
+            ]
+        },
+        {
+            question: "Who first introduced the use of gloves in surgical practice?",
+            answers: [
+                { text: "U. halsted and O. Tsege-Manteuffel", correct: true },
+                { text: "N.I. Pirogov and I.V. Buyalsky", correct: false },
+                { text: "S.I. Spasokukotsky and I.G. Kochergin", correct: false },
+                { text: "I. Zemmelweis and K. Shimmelbush", correct: false },
+                { text: "N.V. Sklifosovsky and F.I. Inozemtsev", correct: false },
+            ]
+        },
+        {
+            question: "Who was first discovered the Rh factor in 1940 by?",
+            answers: [
+                { text: "K. Landsteiner and A. Wiener", correct: true },
+                { text: "G. Fischer", correct: false },
+                { text: "V.N. Shamov and S.S. Yudin", correct: false },
+                { text: "Ya. Yansky and U.L. Moss", correct: false },
+                { text: "D. Hirfeld", correct: false },
+            ]
+        },
+        {
+            question: "Who were the representatives of the empirical development of surgery?",
+            answers: [
+                { text: "A. Pare, Paracelsus", correct: true },
+                { text: "U. Garvey, A. Leeuwenhoek", correct: false },
+                { text: "N.I. Pirogov, I.V. Buyalsky", correct: false },
+                { text: "J.D. Larrey< E. Bergman", correct: false },
+                { text: "I.F. Bush, T. Billrot", correct: false },
+            ]
+        },
+        {
+            question: "The second half of the XIX century in the development of the surgical specialty is a period:",
+            answers: [
+                { text: "great discoveries", correct: true },
+                { text: "empirical", correct: false },
+                { text: "anatomical and morphological", correct: false },
+                { text: "physiological and biological", correct: false },
+                { text: "reconstructive and plastic surgery", correct: false },
+            ]
+        },
+        {
+            question: "What occurs in a positive azopyram test?",
+            answers: [
+                { text: "pink-lilac staining", correct: true },
+                { text: "blue-purple staining", correct: false },
+                { text: "bright purple staining", correct: false },
+                { text: "yellow-green staining", correct: false },
+                { text: "purple-red staining", correct: false },
+            ]
+        },
+        {
+            question: "Sterilized items in a non-combined packaging bag remain sterile for:",
+            answers: [
+                { text: "3 days", correct: true },
+                { text: "2 days", correct: false },
+                { text: "1 day", correct: false },
+                { text: "5 days", correct: false },
+                { text: "7 days", correct: false },
+            ]
+        },
+        {
+            question: "Disposable bags for the collection of CLASS B waste must be colored:",
+            answers: [
+                { text: "yellow", correct: true },
+                { text: "red", correct: false },
+                { text: "white", correct: false },
+                { text: "green", correct: false },
+                { text: "blue", correct: false },
+            ]
+        },
+        {
+            question: "After pre-sterilization cleaning, water is used to rinse the instruments:",
+            answers: [
+                { text: "flowing", correct: true },
+                { text: "filtered", correct: false },
+                { text: "boiled", correct: false },
+                { text: "distilled", correct: false },
+                { text: "twice distilled", correct: false },
+            ]
+        },
+        {
+            question: "A solution combining disinfection and pre-sterilization cleaning is called:",
+            answers: [
+                { text: "2% vircon", correct: true },
+                { text: "0,5% chlorhexidine", correct: false },
+                { text: "6% hydrogen peroxide", correct: false },
+                { text: "3% hydrogen peroxide", correct: false },
+                { text: "3% chloramine", correct: false },
+            ]
+        },
+        {
+            question: "What kind of solution is used for cold sterilization of dental mirrors?",
+            answers: [
+                { text: "6% hydrogen peroxide solution", correct: true },
+                { text: "45% ethyl alcohol", correct: false },
+                { text: "0,5% chloramine solution", correct: false },
+                { text: "1% hydrogen peroxide solution", correct: false },
+                { text: "75% methyl alcohol", correct: false },
+            ]
+        },
+        {
+            question: "After pre-sterilization cleaning, water is used to rinse the instruments:",
+            answers: [
+                { text: "flowing", correct: true },
+                { text: "filtered", correct: false },
+                { text: "boiled", correct: false },
+                { text: "distilled", correct: false },
+                { text: "twice distilled", correct: false },
+            ]
+        },
+        {
+            question: "A solution combining disinfection and pre-sterilization cleaning is called:",
+            answers: [
+                { text: "2% vircon", correct: true },
+                { text: "0,5% chlorhexidine", correct: false },
+                { text: "6% hydrogen peroxide", correct: false },
+                { text: "3% hydrogen peroxide", correct: false },
+                { text: "3% chloramine", correct: false },
+            ]
+        },
+        {
+            question: "What kind of solution is used for cold sterilization of dental mirrors?",
+            answers: [
+                { text: "6% hydrogen peroxide solution", correct: true },
+                { text: "45% ethyl alcohol", correct: false },
+                { text: "0,5% chloramine solution", correct: false },
+                { text: "1% hydrogen peroxide solution", correct: false },
+                { text: "75% methyl alcohol", correct: false },
+            ]
+        },
+        {
+            question: "The divergent turtle bandage on the knee joint begins with the application of:",
+            answers: [
+                { text: "circular rounds through the joint", correct: true },
+                { text: "creeping bandage on the shin", correct: false },
+                { text: "spiral bandage on the hip", correct: false },
+                { text: "circular rounds above the knee joint", correct: false },
+                { text: "circular rounds below the knee joint", correct: false },
+            ]
+        },
+        {
+            question: "The group of hemodynamic blood substitutes includes:",
+            answers: [
+                { text: "polydesis", correct: true },
+                { text: "albumin", correct: false },
+                { text: "polyglucine", correct: false },
+                { text: "protein", correct: false },
+                { text: "globulin", correct: false },
+            ]
+        },
+        {
+            question: "Which one of the following is a hard bandage?",
+            answers: [
+                { text: "gypsum", correct: true },
+                { text: "glue", correct: false },
+                { text: "adhesive tape", correct: false },
+                { text: "colloidal", correct: false },
+                { text: "occlusive", correct: false },
+            ]
+        },
+        {
+            question: "How should the immobilization be carried out in case of a pelvic fracture?",
+            answers: [
+                { text: "on the shield in the \"frog\" position", correct: true },
+                { text: "on the shield, necessarily on the stomach", correct: false },
+                { text: "with Kramer tires", correct: false },
+                { text: "Dieterich's tires", correct: false },
+                { text: "using a circular pelvic compression bandage", correct: false },
+            ]
+        },
+        {
+            question: "An invasive examination method implies:",
+            answers: [
+                { text: "a method in which the integrity of the integumentary tissues is violated and, accordingly, there is a possibility of complications in the form of bleeding, surgical infection, damage to internal organs", correct: true },
+                { text: "a method that is safe for the patient", correct: false },
+                { text: "the method associated with the risk of infection of the doctor as a result of his contact with the patient", correct: false },
+                { text: "the method associated with the risk of the doctor receiving any harm as a result of contact with the patient", correct: false },
+                { text: "a method that is safe for both the patient and the doctor", correct: false },
+            ]
+        },
+        {
+            question: "The main difference between a surgical medical history and therapeutic in:",
+            answers: [
+                { text: "the presence of the section \"local status\"", correct: true },
+                { text: "a shorter and more specific statement of complaints", correct: false },
+                { text: "setting the time of the onset of the disease to the minute", correct: false },
+                { text: "a more detailed description of the musculoskeletal system", correct: false },
+                { text: "mandatory entry into the medical history of information about previously performed surgical interventions to the patient", correct: false },
+            ]
+        },
+        {
+            question: "The sequence of examination of the patient os as follows:",
+            answers: [
+                { text: "examination, palpation, percussion, auscultation", correct: true },
+                { text: "auscultation, percussion, palpation, examination", correct: false },
+                { text: "examination, percussion, palpation, auscultation", correct: false },
+                { text: "palpation, examination, percussion, auscultation", correct: false },
+            ]
+        },
+        {
+            question: "Blood in (III) groups can be injected to individuals:",
+            answers: [
+                { text: "with blood groups II and III", correct: true },
+                { text: "only with blood type III", correct: false },
+                { text: "with any blood type", correct: false },
+                { text: "only with blood groups III and IV", correct: false },
+                { text: "only with blood type II", correct: false },
+            ]
+        },
+        {
+            question: "The group of hemodynamic blood substitutes includes:",
+            answers: [
+                { text: "polydesis", correct: true },
+                { text: "albumin", correct: false },
+                { text: "polyglucine", correct: false },
+                { text: "protein", correct: false },
+                { text: "globulin", correct: false },
+            ]
+        },
+        {
+            question: "To conduct a biological test, enter:",
+            answers: [
+                { text: "three times 25 ml of blood", correct: true },
+                { text: "25 ml of blood once and monitor the patient's condition for 5 minutes", correct: false },
+                { text: "three times 10 ml of blood with an interval of 3 minutes, watching the patient", correct: false },
+                { text: "two times 10 ml of blood with an interval of 3 minutes, watching the patient", correct: false },
+                { text: "25 ml of blood, monitor the patient's condition for 5 minutes", correct: false },
+            ]
+        },
+        {
+            question: "On the first day after a properly performed hemotransfusion, the following complication occurs more often:",
+            answers: [
+                { text: "pyrogenic reactions", correct: true },
+                { text: "thromboembolism", correct: false },
+                { text: "acute dilation of the heart", correct: false },
+                { text: "acute renal failure", correct: false },
+                { text: "acute cerebrovascular", correct: false },
+            ]
+        },
+        {
+            question: "The blood type during the transfusion:",
+            answers: [
+                { text: "checked before each blood transfusion", correct: true },
+                { text: "checked before the first blood transfusion", correct: false },
+                { text: "it is not checked, there is enough data in the passport", correct: false },
+                { text: "it is not checked, there is enough data in the medical history", correct: false },
+                { text: "it is not checked, there is enough anamnesis data", correct: false },
+            ]
+        },
+        {
+            question: "Hemotransfusion and obstetric anamnesis before the blood transfusion can:",
+            answers: [
+                { text: "prevent possible hemotransfusion complications", correct: true },
+                { text: "urgently pick up onated blood", correct: false },
+                { text: "determine the Rh affiliation and blood type of the patient", correct: false },
+                { text: "identify hereditary diseases", correct: false },
+                { text: "make a medical history", correct: false },
+            ]
+        },
+        {
+            question: "The purulent wound was drained with a swab with a hypertonic solution of table salt. What kind of antiseptic is used?",
+            answers: [
+                { text: "physical", correct: true },
+                { text: "chemical", correct: false },
+                { text: "biological", correct: false },
+                { text: "mechanical", correct: false },
+                { text: "mixed", correct: false },
+            ]
+        },
+        {
+            question: "Optical instruments in the surgical department are usually sterilized by:",
+            answers: [
+                { text: "chemical method", correct: true },
+                { text: "plasmic method", correct: false },
+                { text: "infrared method", correct: false },
+                { text: "radiation method", correct: false },
+                { text: "formaldehyde method", correct: false },
+            ]
+        },
+        {
+            question: "Checking for the presence of detergent residues is carried out using:",
+            answers: [
+                { text: "phenolphthalein", correct: true },
+                { text: "benzidine", correct: false },
+                { text: "azopyram", correct: false },
+                { text: "formaldehyde", correct: false },
+                { text: "amidopyrin", correct: false },
+            ]
+        },
+        {
+            question: "Sterilization mode of endoscopic equipment is carried out by scheme:",
+            answers: [
+                { text: "in a 6% solution of hydrogen peroxide 360 min", correct: true },
+                { text: "in a 3% chloramine solution for 30 min", correct: false },
+                { text: "in a 10% solution of hydrogen peroxide for 60 min", correct: false },
+                { text: "in 70degrees of alcohol for 10 min", correct: false },
+                { text: "in 96 degrees of alcohol for 10 min", correct: false },
+            ]
+        },
+        {
+            question: "Duration of disinfection by boiling in distilled water is:",
+            answers: [
+                { text: "30 min", correct: true },
+                { text: "20 min", correct: false },
+                { text: "15 min", correct: false },
+                { text: "45 min", correct: false },
+                { text: "60 min", correct: false },
+            ]
+        },
+        {
+            question: "Select from the following measures of exposure to microbes those that relate to physical antiseptics:",
+            answers: [
+                { text: "application of a gauze swab with hypertonic sodium chloride solution, laser wound treatment, vacuum wound treatment", correct: true },
+                { text: "the use of antibiotics, chymotrypsin", correct: false },
+                { text: "exposure to sunlight, plasma transfusion", correct: false },
+                { text: "the use of serums and toxoids, washing the wound with a solution of hydrogen peroxide", correct: false },
+                { text: "excision of the edges and bottom of the wound, stopping bleeding, removal of foreign bodies, suturing", correct: false },
+            ]
+        },
+        {
+            question: "The immobilization of a clavicle fracture can be carried out by:",
+            answers: [
+                { text: "A Dezo bandage", correct: true },
+                { text: "a Velpo bandage", correct: false },
+                { text: "a Dieterich's tire", correct: false },
+                { text: "a pneumatic tire", correct: false },
+                { text: "a vacuum tire", correct: false },
+            ]
+        },
+        {
+            question: "To immobilize the cervical spine, it is used:",
+            answers: [
+                { text: "Kramer's splint", correct: true },
+                { text: "\"bridle\" bandage", correct: false },
+                { text: "splint according to the type of Elansky", correct: false },
+                { text: "position on the shield with bending of the head", correct: false },
+                { text: "position on the shield with head extension", correct: false },
+            ]
+        },
+        {
+            question: "In case of a fracture of the collarbone, a bandage is applied:",
+            answers: [
+                { text: "Dezo", correct: true },
+                { text: "circular", correct: false },
+                { text: "spiral", correct: false },
+                { text: "spikelike", correct: false },
+                { text: "cruciform", correct: false },
+            ]
+        },
+        {
+            question: "If the entire back surface of the wrist is damaged, a bandage is convenient:",
+            answers: [
+                { text: "\"mitten\" bandage", correct: true },
+                { text: "\"glove\" bandage", correct: false },
+                { text: "cruciform", correct: false },
+                { text: "spiral", correct: false },
+                { text: "circular", correct: false },
+            ]
+        },
+        {
+            question: "When applying a bandage to the right eye, your actions:",
+            answers: [
+                { text: "the beginning of the bandage is in the left hand, the head is in the right", correct: true },
+                { text: "the beginning of the bandage is in the right hand, the head is in the left", correct: false },
+                { text: "two bandages should be used", correct: false },
+                { text: "a double-headed bandage should be used", correct: false },
+                { text: "non-bandage bandages should be used", correct: false },
+            ]
+        },
+        {
+            question: "In case of intestinal bleeding, it is necessary to:",
+            answers: [
+                { text: "provide the patient with complete rest", correct: true },
+                { text: "give any laxative", correct: false },
+                { text: "put a cleasing enema", correct: false },
+                { text: "feed the patient", correct: false },
+                { text: "wake him up", correct: false },
+            ]
+        },
+        {
+            question: "In case of hemoptysis, it is necessary to put the patient down. Where should you put the hot water bottle to relieve his condition?",
+            answers: [
+                { text: "to the legs", correct: true },
+                { text: "on the chest", correct: false },
+                { text: "on the shoulder blades", correct: false },
+                { text: "under the back", correct: false },
+                { text: "to the head", correct: false },
+            ]
+        },
+        {
+            question: "Indicate the early symptoms of complications caused by transfusion of incompatible blood:",
+            answers: [
+                { text: "feeling of heat, pain in the lower back, abdomen, behind the sternum", correct: true },
+                { text: "hypothermia, apathy", correct: false },
+                { text: "anuria, hemoglobinuria", correct: false },
+                { text: "anisocoria, bradycardia", correct: false },
+                { text: "bradypnea", correct: false },
+            ]
+        },
+        {
+            question: "What kind of individual compatibility test is carried out during plasma transfusion?",
+            answers: [
+                { text: "biological test", correct: true },
+                { text: "group compatibility", correct: false },
+                { text: "Rh ccompatibility", correct: false },
+                { text: "all of the above", correct: false },
+                { text: "there are no samples", correct: false },
+            ]
+        },
+        {
+            question: "What complications can occur during transfusion of blood substitutes?",
+            answers: [
+                { text: "all of the above reactions", correct: true },
+                { text: "allergic reactions", correct: false },
+                { text: "pyrogenic reactions", correct: false },
+                { text: "toxic reactions", correct: false },
+                { text: "thromboembolism", correct: false },
+            ]
+        },
+        {
+            question: "Which substance is typically used in contrast radiography of the gastrointestinal tract?",
+            answers: [
+                { text: "Barium", correct: true },
+                { text: "Iodine", correct: false },
+                { text: "Gadolinium", correct: false },
+                { text: "Water", correct: false },
+                { text: "Iron", correct: false },
+            ]
+        },
+        {
+            question: "What type of radiation is used in CT scans?",
+            answers: [
+                { text: "X-rays", correct: true },
+                { text: "Alpha particles", correct: false },
+                { text: "Beta particles", correct: false },
+                { text: "Gamma radiation", correct: false },
+                { text: "Radio waves", correct: false },
+            ]
+        },
+        {
+            question: "What is the basic principle of obtaining images in radiography?",
+            answers: [
+                { text: "Absorption of X-rays by different tissues", correct: true },
+                { text: "Reflection of sound waves", correct: false },
+                { text: "Magnetic alignment of hydrogen nuclei", correct: false },
+                { text: "Emission of gamma rays from a tracer", correct: false },
+                { text: "Detection of heat patterns", correct: false },
+            ]
+        },
+        {
+            question: "What is the basic principle of obtaining images in ultrasound?",
+            answers: [
+                { text: "Reflection of sound waves", correct: true },
+                { text: "Absorption of X-rays by different tissues", correct: false },
+                { text: "Magnetic alignment of hydrogen nuclei", correct: false },
+                { text: "Emission of gamma rays from a tracer", correct: false },
+                { text: "Detection of heat patterns", correct: false },
+            ]
+        },
+        {
+            question: "What is the basic principle of obtaining images in CT scan?",
+            answers: [
+                { text: "Absorption of X-rays by different tissues", correct: true },
+                { text: "Reflection of sound waves", correct: false },
+                { text: "Magnetic alignment of hydrogen nuclei", correct: false },
+                { text: "Emission of gamma rays from a tracer", correct: false },
+                { text: "Detection of heat patterns", correct: false },
+            ]
+        },
+        {
+            question: "What is the basic principle of obtaining images in MRI?",
+            answers: [
+                { text: "Magnetic alignment of hydrogen nuclei", correct: true },
+                { text: "Reflection of sound waves", correct: false },
+                { text: "Absorption of X-rays by different tissues", correct: false },
+                { text: "Emission of gamma rays from a tracer", correct: false },
+                { text: "Detection of heat patterns", correct: false },
+            ]
+        },
+        {
+            question: "10 months baby has abdominal distention, vomiting, absence of stool for the last 2 days. A pediatrician suspects small bowel obstruction. Which imaging technique should be performed in this case to diagnose intussusception?",
+            answers: [
+                { text: "Abdominal  Ultrasound", correct: true },
+                { text: "Small bowel follow through", correct: false },
+                { text: "Enteroclysis", correct: false },
+                { text: "MRI of the abdomen", correct: false },
+                { text: "CT of the abdomen", correct: false },
+            ]
+        },
+        {
+            question: "24 years old female has sudden, intense, wave-like pain which started yesterday starting in the flank and migrating downward. She has noticed blood in urine , frequent and painful urination. Which diagnostic imaging method in this case you should order to reveal renal colic?",
+            answers: [
+                { text: "Abdominal CT scan", correct: true },
+                { text: "Abdominal MRI", correct: false },
+                { text: "Doppler ultrasound of the abdomen", correct: false },
+                { text: "Abdominal  X-ray", correct: false },
+                { text: "Renal arteries angiography", correct: false },
+            ]
+        },
+        ];
+
+        // Quiz state
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let isExamMode = false;
+        let isDarkMode = false;
+        let isAnswerMode = false;
+        let isQuestionShuffleMode = false; // NEW: Question shuffle mode for non-exam
+        let isQuestionShuffleEnabled = false; // NEW: Question shuffle for exam mode
+        let timerInterval = null;
+        let timerActive = false;
+        let timerExpired = false;
+        let totalQuestions = questions.length;
+        let selectedQuestionCount = questions.length;
+        let examGridExpanded = true;
+        let originalQuestionOrder = []; // NEW: Store original question order
+        let shuffledQuestionOrder = []; // NEW: Store shuffled question order
+        let currentQuestionOrder = []; // NEW: Current active question order
+
+        // NEW: Shuffle array function
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // NEW: Shuffle options for a question
+        function shuffleQuestionOptions(question) {
+            const shuffledAnswers = shuffleArray(question.answers);
+            return {
+                ...question,
+                answers: shuffledAnswers
+            };
+        }
+
+        // Initialize quiz
+        function initializeQuiz() {
+            // Initialize question orders
+            originalQuestionOrder = Array.from({length: questions.length}, (_, i) => i);
+            shuffledQuestionOrder = shuffleArray(originalQuestionOrder);
+            currentQuestionOrder = [...originalQuestionOrder];
+            
+            userAnswers = new Array(questions.length).fill(null);
+            loadQuestion();
+            createQuestionGrid();
+            createMobileQuestionGrid();
+            createExamQuestionGrid();
+            updateNavigationButtons();
+        }
+
+        // Load current question with option shuffling
+        function loadQuestion() {
+            const questionIndex = currentQuestionOrder[currentQuestionIndex];
+            const originalQuestion = questions[questionIndex];
+            
+            // NEW: Always shuffle options when loading a question
+            const question = shuffleQuestionOptions(originalQuestion);
+            
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestionIndex + 1}`;
+            document.getElementById('questionCounter').textContent = `${currentQuestionIndex + 1} / ${selectedQuestionCount}`;
+            document.getElementById('questionText').textContent = question.question;
+
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+
+            question.answers.forEach((answer, index) => {
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'answer-option';
+                answerDiv.onclick = () => selectAnswer(index, answer.correct);
+
+                const optionLabel = document.createElement('div');
+                optionLabel.className = 'option-label';
+                optionLabel.textContent = String.fromCharCode(65 + index); // A, B, C, D
+
+                const optionText = document.createElement('div');
+                optionText.className = 'option-text';
+                optionText.textContent = answer.text;
+
+                answerDiv.appendChild(optionLabel);
+                answerDiv.appendChild(optionText);
+                answersContainer.appendChild(answerDiv);
+
+                // Restore previous selection
+                if (userAnswers[questionIndex] !== null && userAnswers[questionIndex].selectedIndex === index) {
+                    answerDiv.classList.add('selected');
+                }
+
+                // Apply answer mode styling if active and not in exam mode
+                if (isAnswerMode && !isExamMode) {
+                    if (answer.correct) {
+                        answerDiv.classList.add('correct-answer-mode');
+                    } else {
+                        answerDiv.classList.add('other-answer-mode');
+                    }
+                }
+
+                // Apply timer expired styling
+                if (timerExpired) {
+                    answerDiv.classList.add('timer-expired');
+                }
+            });
+
+            updateQuestionGrid();
+            updateMobileQuestionGrid();
+            updateExamQuestionGrid();
+        }
+
+        // Select answer with correct answer tracking
+        function selectAnswer(answerIndex, isCorrect) {
+            if (timerExpired) return;
+
+            const questionIndex = currentQuestionOrder[currentQuestionIndex];
+            const answerOptions = document.querySelectorAll('.answer-option');
+            
+            // In exam mode, ensure only one option can be selected (radio button behavior)
+            if (isExamMode) {
+                answerOptions.forEach(option => option.classList.remove('selected'));
+            }
+
+            // Store the answer with correctness info
+            userAnswers[questionIndex] = {
+                selectedIndex: answerIndex,
+                isCorrect: isCorrect
+            };
+
+            // Update visual selection
+            answerOptions[answerIndex].classList.add('selected');
+
+            // In non-exam mode, show immediate feedback
+            if (!isExamMode) {
+                const originalQuestion = questions[questionIndex];
+                answerOptions.forEach((option, index) => {
+                    option.classList.remove('correct', 'incorrect');
+                    // Find the correct answer in the shuffled options
+                    const currentAnswers = Array.from(document.querySelectorAll('.option-text')).map(el => el.textContent);
+                    const correctAnswerText = originalQuestion.answers.find(a => a.correct).text;
+                    const correctIndex = currentAnswers.indexOf(correctAnswerText);
+                    
+                    if (index === correctIndex) {
+                        option.classList.add('correct');
+                    } else if (index === answerIndex) {
+                        option.classList.add('incorrect');
+                    }
+                    option.classList.add('disabled');
+                });
+            }
+
+            updateQuestionGrid();
+            updateMobileQuestionGrid();
+            updateExamQuestionGrid();
+            updateNavigationButtons();
+        }
+
+        // Navigation functions
+        function nextQuestion() {
+            if (currentQuestionIndex < selectedQuestionCount - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+                updateNavigationButtons();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+                updateNavigationButtons();
+            }
+        }
+
+        function jumpToQuestion(questionIndex) {
+            if (questionIndex < selectedQuestionCount) {
+                currentQuestionIndex = questionIndex;
+                loadQuestion();
+                updateNavigationButtons();
+            }
+        }
+
+        function jumpToQuestionNumber() {
+            const input = document.getElementById('jumpInput');
+            const questionNumber = parseInt(input.value);
+            
+            if (questionNumber >= 1 && questionNumber <= selectedQuestionCount) {
+                jumpToQuestion(questionNumber - 1);
+                input.value = '';
+            } else {
+                alert(`Please enter a number between 1 and ${selectedQuestionCount}`);
+            }
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const finishBtn = document.getElementById('finishBtn');
+            const submitBtn = document.getElementById('submitBtn');
+
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === selectedQuestionCount - 1) {
+                nextBtn.style.display = 'none';
+                if (isExamMode) {
+                    submitBtn.style.display = 'inline-block';
+                    finishBtn.style.display = 'none';
+                } else {
+                    finishBtn.style.display = 'inline-block';
+                    submitBtn.style.display = 'none';
+                }
+            } else {
+                nextBtn.style.display = 'inline-block';
+                finishBtn.style.display = 'none';
+                submitBtn.style.display = 'none';
+            }
+
+            // Show submit button in exam mode for instant results
+            if (isExamMode && currentQuestionIndex < selectedQuestionCount - 1) {
+                submitBtn.style.display = 'inline-block';
+            }
+        }
+
+        // Question grid functions
+        function createQuestionGrid() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < selectedQuestionCount; i++) {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.textContent = i + 1;
+                gridItem.onclick = () => jumpToQuestion(i);
+                grid.appendChild(gridItem);
+            }
+        }
+
+        function createMobileQuestionGrid() {
+            const grid = document.getElementById('mobileQuestionGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < selectedQuestionCount; i++) {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.textContent = i + 1;
+                gridItem.onclick = () => jumpToQuestion(i);
+                grid.appendChild(gridItem);
+            }
+        }
+
+        function createExamQuestionGrid() {
+            const grid = document.getElementById('examGridContainer');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < selectedQuestionCount; i++) {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'exam-grid-item';
+                gridItem.textContent = i + 1;
+                gridItem.onclick = () => jumpToQuestion(i);
+                grid.appendChild(gridItem);
+            }
+        }
+
+        function updateQuestionGrid() {
+            const gridItems = document.querySelectorAll('#questionGrid .grid-item');
+            gridItems.forEach((item, index) => {
+                item.classList.remove('current', 'answered', 'unanswered');
+                
+                const questionIndex = currentQuestionOrder[index];
+                if (index === currentQuestionIndex) {
+                    item.classList.add('current');
+                } else if (userAnswers[questionIndex] !== null) {
+                    item.classList.add('answered');
+                } else {
+                    item.classList.add('unanswered');
+                }
+            });
+        }
+
+        function updateMobileQuestionGrid() {
+            const gridItems = document.querySelectorAll('#mobileQuestionGrid .grid-item');
+            gridItems.forEach((item, index) => {
+                item.classList.remove('current', 'answered', 'unanswered');
+                
+                const questionIndex = currentQuestionOrder[index];
+                if (index === currentQuestionIndex) {
+                    item.classList.add('current');
+                } else if (userAnswers[questionIndex] !== null) {
+                    item.classList.add('answered');
+                } else {
+                    item.classList.add('unanswered');
+                }
+            });
+        }
+
+        function updateExamQuestionGrid() {
+            const gridItems = document.querySelectorAll('#examGridContainer .exam-grid-item');
+            gridItems.forEach((item, index) => {
+                item.classList.remove('current', 'answered', 'unanswered');
+                
+                const questionIndex = currentQuestionOrder[index];
+                if (index === currentQuestionIndex) {
+                    item.classList.add('current');
+                } else if (userAnswers[questionIndex] !== null) {
+                    item.classList.add('answered');
+                } else {
+                    item.classList.add('unanswered');
+                }
+            });
+        }
+
+        // Mobile dropdown functions
+        function toggleMobileDropdown() {
+            const content = document.getElementById('dropdownContent');
+            const arrow = document.getElementById('dropdownArrow');
+            
+            content.classList.toggle('expanded');
+            arrow.classList.toggle('expanded');
+        }
+
+        // Exam grid toggle functions
+        function toggleExamGrid() {
+            const container = document.getElementById('examGridContainer');
+            const toggle = document.getElementById('examGridToggle');
+            
+            examGridExpanded = !examGridExpanded;
+            
+            if (examGridExpanded) {
+                container.classList.remove('collapsed');
+                toggle.textContent = 'Collapse';
+            } else {
+                container.classList.add('collapsed');
+                toggle.textContent = 'Expand';
+            }
+        }
+
+        // Mode toggle functions
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            const btn = document.getElementById('darkModeBtn');
+            
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                btn.classList.add('active');
+                btn.textContent = '☀️ Light Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                btn.classList.remove('active');
+                btn.textContent = '🌙 Dark Mode';
+            }
+        }
+
+        function toggleAnswerMode() {
+            isAnswerMode = !isAnswerMode;
+            const btn = document.getElementById('answerModeBtn');
+            
+            if (isAnswerMode) {
+                btn.classList.add('active');
+                btn.textContent = '🔒 Hide Answers';
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = '💡 Answer Mode';
+            }
+            
+            loadQuestion(); // Reload to apply answer mode styling
+        }
+
+        // NEW: Question shuffle mode for non-exam mode
+        function toggleQuestionShuffleMode() {
+            isQuestionShuffleMode = !isQuestionShuffleMode;
+            const btn = document.getElementById('questionShuffleModeBtn');
+            
+            if (isQuestionShuffleMode) {
+                btn.classList.add('active');
+                btn.textContent = '🔀 Shuffle: ON';
+                currentQuestionOrder = [...shuffledQuestionOrder];
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = '🔀 Shuffle Questions';
+                currentQuestionOrder = [...originalQuestionOrder];
+            }
+            
+            // Reset to first question and reload
+            currentQuestionIndex = 0;
+            loadQuestion();
+            createQuestionGrid();
+            createMobileQuestionGrid();
+            updateNavigationButtons();
+        }
+
+        // NEW: Question shuffle toggle for exam mode
+        function toggleQuestionShuffle() {
+            isQuestionShuffleEnabled = !isQuestionShuffleEnabled;
+            const btn = document.getElementById('shuffleToggleBtn');
+            const settings = document.querySelector('.question-shuffle-settings');
+            const display = document.getElementById('questionShuffleDisplay');
+            const displayText = document.getElementById('shuffleDisplayText');
+            const resetBtn = document.getElementById('shuffleResetBtn');
+            
+            if (isQuestionShuffleEnabled) {
+                btn.classList.add('active');
+                btn.textContent = 'Enabled';
+                settings.classList.add('hidden');
+                display.classList.add('active');
+                displayText.textContent = 'Shuffle: ON';
+                resetBtn.classList.add('visible');
+                
+                // Apply shuffle
+                currentQuestionOrder = [...shuffledQuestionOrder];
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = 'Enable';
+                settings.classList.remove('hidden');
+                display.classList.remove('active');
+                displayText.textContent = 'Shuffle: Off';
+                resetBtn.classList.remove('visible');
+                
+                // Restore original order
+                currentQuestionOrder = [...originalQuestionOrder];
+            }
+            
+            // Reset to first question and reload
+            currentQuestionIndex = 0;
+            loadQuestion();
+            createExamQuestionGrid();
+            updateNavigationButtons();
+        }
+
+        // NEW: Reset question shuffle
+        function resetQuestionShuffle() {
+            isQuestionShuffleEnabled = false;
+            const btn = document.getElementById('shuffleToggleBtn');
+            const settings = document.querySelector('.question-shuffle-settings');
+            const display = document.getElementById('questionShuffleDisplay');
+            const displayText = document.getElementById('shuffleDisplayText');
+            const resetBtn = document.getElementById('shuffleResetBtn');
+            
+            btn.classList.remove('active');
+            btn.textContent = 'Enable';
+            settings.classList.remove('hidden');
+            display.classList.remove('active');
+            displayText.textContent = 'Shuffle: Off';
+            resetBtn.classList.remove('visible');
+            
+            // Restore original order
+            currentQuestionOrder = [...originalQuestionOrder];
+            currentQuestionIndex = 0;
+            loadQuestion();
+            createExamQuestionGrid();
+            updateNavigationButtons();
+        }
+
+        function toggleExamMode() {
+            isExamMode = !isExamMode;
+            const btn = document.getElementById('examModeBtn');
+            const exitBtn = document.getElementById('exitBtnText');
+            const title = document.querySelector('.title');
+            
+            if (isExamMode) {
+                document.body.classList.add('exam-mode');
+                btn.classList.add('active');
+                btn.textContent = '📝 Exit Exam Mode';
+                exitBtn.textContent = 'Exit Exam Mode';
+                title.textContent = 'EXAM MODE';
+                
+                // Reset all answers and reload
+                userAnswers = new Array(questions.length).fill(null);
+                currentQuestionIndex = 0;
+                loadQuestion();
+                updateNavigationButtons();
+            } else {
+                document.body.classList.remove('exam-mode');
+                btn.classList.remove('active');
+                btn.textContent = '🎓 Simulate Exam Mode';
+                exitBtn.textContent = 'Exit';
+                title.textContent = 'ITC';
+                
+                loadQuestion(); // Reload to remove exam mode styling
+            }
+        }
+
+        // NEW: Enhanced question count functions
+        function setQuestionCount() {
+            const input = document.getElementById('questionCountInput');
+            const newCount = parseInt(input.value) || questions.length;
+            
+            if (newCount < 1 || newCount > questions.length) {
+                alert(`Please enter a number between 1 and ${questions.length}`);
+                input.value = selectedQuestionCount;
+                return;
+            }
+            
+            selectedQuestionCount = newCount;
+            
+            // Hide settings and show display
+            const settings = document.querySelector('.question-count-settings');
+            const display = document.getElementById('questionCountDisplay');
+            const displayText = document.getElementById('countDisplayText');
+            const resetBtn = document.getElementById('countResetDisplayBtn');
+            
+            settings.classList.add('hidden');
+            displayText.textContent = `${selectedQuestionCount} / ${questions.length}`;
+            resetBtn.classList.add('visible');
+            
+            // Reset quiz state
+            userAnswers = new Array(questions.length).fill(null);
+            currentQuestionIndex = 0;
+            
+            // Update UI
+            document.getElementById('questionCounter').textContent = `1 / ${selectedQuestionCount}`;
+            document.getElementById('jumpInput').max = selectedQuestionCount;
+            createQuestionGrid();
+            createMobileQuestionGrid();
+            createExamQuestionGrid();
+            loadQuestion();
+            updateNavigationButtons();
+        }
+
+        // NEW: Reset question count
+        function resetQuestionCount() {
+            selectedQuestionCount = questions.length;
+            
+            // Show settings and hide display
+            const settings = document.querySelector('.question-count-settings');
+            const display = document.getElementById('questionCountDisplay');
+            const displayText = document.getElementById('countDisplayText');
+            const resetBtn = document.getElementById('countResetDisplayBtn');
+            const input = document.getElementById('questionCountInput');
+            
+            settings.classList.remove('hidden');
+            displayText.textContent = `${questions.length} / ${questions.length}`;
+            resetBtn.classList.remove('visible');
+            input.value = questions.length;
+            
+            // Reset quiz state
+            userAnswers = new Array(questions.length).fill(null);
+            currentQuestionIndex = 0;
+            
+            // Update UI
+            document.getElementById('questionCounter').textContent = `1 / ${selectedQuestionCount}`;
+            document.getElementById('jumpInput').max = selectedQuestionCount;
+            createQuestionGrid();
+            createMobileQuestionGrid();
+            createExamQuestionGrid();
+            loadQuestion();
+            updateNavigationButtons();
+        }
+
+        // Timer functions
+        function startTimer() {
+            const minutes = parseInt(document.getElementById('minutesInput').value) || 0;
+            const seconds = parseInt(document.getElementById('secondsInput').value) || 0;
+            const totalSeconds = minutes * 60 + seconds;
+
+            if (totalSeconds <= 0) {
+                alert('Please set a valid time');
+                return;
+            }
+
+            timerActive = true;
+            timerExpired = false;
+            let remainingTime = totalSeconds;
+
+            const timer = document.getElementById('timer');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const timerResetBtn = document.getElementById('timerResetBtn');
+            const timerSettings = document.querySelector('.timer-settings');
+
+            timer.classList.add('active');
+            timerResetBtn.classList.add('visible');
+            timerSettings.classList.add('hidden');
+
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(remainingTime / 60);
+                const seconds = remainingTime % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    timerExpired = true;
+                    timerActive = false;
+                    timer.classList.remove('active');
+                    timerDisplay.textContent = 'Time expired!';
+                    
+                    // Show timer expired overlay
+                    document.getElementById('timerExpiredOverlay').classList.add('visible');
+                    document.getElementById('quizSection').classList.add('timer-expired');
+                    
+                    // Auto-submit quiz
+                    setTimeout(() => {
+                        finishQuiz();
+                    }, 3000);
+                }
+
+                remainingTime--;
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerActive = false;
+            timerExpired = false;
+
+            const timer = document.getElementById('timer');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const timerResetBtn = document.getElementById('timerResetBtn');
+            const timerSettings = document.querySelector('.timer-settings');
+
+            timer.classList.remove('active');
+            timerResetBtn.classList.remove('visible');
+            timerSettings.classList.remove('hidden');
+            timerDisplay.textContent = 'No timer set';
+
+            document.getElementById('timerExpiredOverlay').classList.remove('visible');
+            document.getElementById('quizSection').classList.remove('timer-expired');
+
+            loadQuestion(); // Reload to remove timer expired styling
+        }
+
+        function hideTimerExpiredOverlay() {
+            document.getElementById('timerExpiredOverlay').classList.remove('visible');
+        }
+
+        // Quiz completion
+        function finishQuiz() {
+            const answeredQuestions = userAnswers.slice(0, selectedQuestionCount).filter(answer => answer !== null).length;
+            const correctAnswers = userAnswers.slice(0, selectedQuestionCount).reduce((count, answer, index) => {
+                if (answer !== null && answer.isCorrect) {
+                    return count + 1;
+                }
+                return count;
+            }, 0);
+
+            const percentage = Math.round((correctAnswers / selectedQuestionCount) * 100);
+            const passed = percentage >= 60;
+
+            if (isExamMode) {
+                // Show result overlay for exam mode
+                const resultOverlay = document.getElementById('resultOverlay');
+                const resultMessage = document.getElementById('resultMessage');
+                const resultTitle = document.getElementById('resultTitle');
+                const resultStats = document.getElementById('resultStats');
+
+                resultTitle.textContent = passed ? '🎉 PASSED!' : '❌ FAILED';
+                resultTitle.className = `result-title ${passed ? 'passed' : 'failed'}`;
+                resultMessage.className = `result-message ${passed ? 'passed' : 'failed'}`;
+
+                resultStats.innerHTML = `
+                    <strong>Questions Answered:</strong> ${answeredQuestions} / ${selectedQuestionCount}<br>
+                    <strong>Correct Answers:</strong> ${correctAnswers} / ${selectedQuestionCount}<br>
+                    <strong>Percentage:</strong> ${percentage}%<br><br>
+                    <em>${passed ? 'Congratulations! You passed the exam.' : 'You need 60% to pass. Better luck next time!'}</em>
+                `;
+
+                resultOverlay.classList.add('visible');
+            } else {
+                // Show alert for normal mode
+                let message = `Quiz Completed!\n\n`;
+                message += `Questions Answered: ${answeredQuestions} / ${selectedQuestionCount}\n`;
+                message += `Correct Answers: ${correctAnswers} / ${selectedQuestionCount}\n`;
+                message += `Percentage: ${percentage}%`;
+
+                alert(message);
+            }
+        }
+
+        function hideResultOverlay() {
+            document.getElementById('resultOverlay').classList.remove('visible');
+        }
+
+        function exitQuiz() {
+            if (isExamMode) {
+                toggleExamMode();
+            } else {
+                if (confirm('Are you sure you want to exit the quiz?')) {
+                    window.close();
+                }
+            }
+        }
+
+        // Initialize the quiz when page loads
+        document.addEventListener('DOMContentLoaded', initializeQuiz);
+    </script>
+</body>
+</html>
+</html>
